@@ -1,0 +1,109 @@
+---
+description: PookieCrafts – architectural and development rules (Next.js + Shopify only, no DB, no custom backend)
+alwaysApply: true
+---
+
+# PookieCrafts – Development Rules
+
+## 0. Project Context
+
+This project is **PookieCrafts**, a small handmade ecommerce store (candles & notebooks).
+
+Architecture:
+- **Next.js (App Router)** frontend
+- **Shopify** as the ONLY ecommerce backend
+- Hosted on **Vercel**
+- **NO custom backend**
+- **NO database**
+- Shopify is the **single source of truth**
+
+Goal: Maximum simplicity, minimal maintenance, fast launch.
+
+---
+
+## 1. Hard Architectural Rules (NON-NEGOTIABLE)
+
+### 1.1 No Database
+- ❌ Do NOT introduce Prisma, Postgres, MySQL, SQLite, Redis, or any DB
+- ❌ Do NOT persist product, order, or cart data locally
+- ✅ All data lives in Shopify
+
+### 1.2 No Custom Backend
+- ❌ No Express, NestJS, Fastify, Hono, or API server
+- ❌ No custom order or checkout logic
+- ✅ Only Next.js + Shopify Storefront API
+
+### 1.3 Shopify Is Source of Truth
+Products, variants, prices, inventory, shipping, taxes, orders, checkout. Never duplicate this data.
+
+---
+
+## 2. Allowed Technologies
+
+**Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, shadcn/ui  
+**Ecommerce:** Shopify Storefront API (GraphQL), Shopify Checkout (redirect only)  
+**Hosting:** Vercel
+
+---
+
+## 3. Forbidden Technologies (DO NOT SUGGEST)
+
+- Any database or ORM
+- Any CMS other than Shopify
+- Custom checkout implementation
+- Shopify Themes
+- Headless CMS (Sanity, Contentful, etc.)
+- Authentication systems, user accounts, review systems, wishlist systems
+
+---
+
+## 4. Data Fetching Rules
+
+- **Static first:** Home, collection, product pages → SSG / ISR
+- **Revalidation:** Time-based first; webhooks optional after MVP
+
+---
+
+## 5. Shopify API Usage
+
+- **Storefront API only** (GraphQL). Do NOT use Admin API in frontend.
+- **Minimal query set:** Products by handle/collection, cart create/update/remove, checkout URL. Avoid overfetching.
+
+---
+
+## 6. Cart Rules
+
+- Cart state: localStorage or cookies; Shopify manages cart; frontend only sends mutations. No server-side cart persistence.
+
+---
+
+## 7. UI & UX Rules
+
+- **Simplicity:** Minimal pages and features; no overengineering.
+- **Design:** Use design tokens and reusable components; avoid one-off custom styles.
+
+---
+
+## 8. SEO & Performance
+
+- Use Next.js metadata API, optimize images, use caching correctly. Avoid client-side fetching for catalog data.
+
+---
+
+## 9. Development Discipline
+
+- **MVP first:** Do NOT build wishlists, user accounts, reviews, complex filtering, or analytics beyond basics.
+- **Clean commits:** Small commits, clear messages, no experimental code in main.
+
+---
+
+## 10. Decision Rule
+
+If unclear: **Choose the option that reduces complexity and maintenance.**  
+If something requires a database: **It is probably out of scope.**
+
+---
+
+## 11. Final Principle
+
+This is a **brand ecommerce site**, not a platform. Speed, clarity, and reliability matter more than flexibility.
