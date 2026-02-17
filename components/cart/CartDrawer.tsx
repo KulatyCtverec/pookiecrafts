@@ -1,7 +1,8 @@
 "use client";
 
-import { X, Minus, Plus } from "lucide-react";
+import { X, Minus, Plus, Loader2 } from "lucide-react";
 import { useCart } from "./CartProvider";
+import type { OptimisticCartLineSnapshot } from "./CartProvider";
 import { Button } from "@/components/design-system/Button";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
 import type { ShopifyCartLine } from "@/lib/shopify";
@@ -14,21 +15,36 @@ function formatPrice(amount: string, currencyCode: string): string {
 }
 
 export function CartDrawer() {
-  const { cart, isOpen, closeCart, updateQuantity, removeLine, cartError } =
-    useCart();
+  const {
+    cart,
+    optimisticLines,
+    isOpen,
+    closeCart,
+    updateQuantity,
+    removeLine,
+    cartError,
+    isLinePending,
+  } = useCart();
 
   if (!isOpen) return null;
 
   const lines = cart?.lines?.nodes ?? [];
-  const total =
+  const realTotal =
     lines.reduce(
-      (s, l) =>
-        s +
-        parseFloat(l.merchandise.price.amount) * l.quantity,
+      (s, l) => s + parseFloat(l.merchandise.price.amount) * l.quantity,
       0
     ) ?? 0;
+  const optimisticTotal =
+    optimisticLines.reduce(
+      (s, l) => s + parseFloat(l.price) * l.quantity,
+      0
+    ) ?? 0;
+  const total = realTotal + optimisticTotal;
   const currency =
-    lines[0]?.merchandise.price.currencyCode ?? "USD";
+    lines[0]?.merchandise.price.currencyCode ??
+    optimisticLines[0]?.currencyCode ??
+    "USD";
+  const hasAnyLines = lines.length > 0 || optimisticLines.length > 0;
 
   return (
     <>
@@ -56,17 +72,21 @@ export function CartDrawer() {
               {cartError}
             </div>
           )}
-          {lines.length === 0 ? (
+          {!hasAnyLines ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground mb-4">Your cart is empty</p>
               <Button onClick={closeCart}>Continue Shopping</Button>
             </div>
           ) : (
             <div className="space-y-4">
+              {optimisticLines.map((opt) => (
+                <OptimisticLineItem key={`opt-${opt.variantId}`} line={opt} />
+              ))}
               {lines.map((line) => (
                 <CartLineItem
                   key={line.id}
                   line={line}
+                  isPending={isLinePending(line.id)}
                   onUpdate={(q) => updateQuantity(line.id, q)}
                   onRemove={() => removeLine(line.id)}
                 />
@@ -75,7 +95,7 @@ export function CartDrawer() {
           )}
         </div>
 
-        {lines.length > 0 && cart?.checkoutUrl && (
+        {hasAnyLines && (
           <div className="border-t border-border p-6 space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-lg">Subtotal</span>
@@ -83,11 +103,21 @@ export function CartDrawer() {
                 {formatPrice(String(total), currency)}
               </span>
             </div>
-            <Button size="lg" className="w-full" asChild>
-              <a href={cart.checkoutUrl} target="_blank" rel="noopener noreferrer">
-                Checkout
-              </a>
-            </Button>
+            {cart?.checkoutUrl ? (
+              <Button size="lg" className="w-full" asChild>
+                <a
+                  href={cart.checkoutUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Checkout
+                </a>
+              </Button>
+            ) : (
+              <Button size="lg" className="w-full" disabled>
+                Updating cart…
+              </Button>
+            )}
             <button
               type="button"
               onClick={closeCart}
@@ -102,12 +132,43 @@ export function CartDrawer() {
   );
 }
 
+function OptimisticLineItem({ line }: { line: OptimisticCartLineSnapshot }) {
+  return (
+    <div className="flex gap-4 bg-background rounded-2xl p-4 opacity-90">
+      {line.image && (
+        <ImageWithFallback
+          src={line.image}
+          alt={line.productTitle}
+          className="w-20 h-20 rounded-xl object-cover"
+        />
+      )}
+      <div className="flex-1 min-w-0">
+        <h3 className="font-semibold truncate">{line.productTitle}</h3>
+        {line.variantTitle && line.variantTitle !== "Default Title" && (
+          <p className="text-sm text-muted-foreground">{line.variantTitle}</p>
+        )}
+        <p className="text-accent font-semibold mt-1">
+          {formatPrice(line.price, line.currencyCode)}
+        </p>
+        <p className="text-sm text-muted-foreground mt-2">
+          <span className="inline-flex items-center gap-1">
+            <Loader2 className="w-3 h-3 animate-spin" />
+            Adding…
+          </span>
+        </p>
+      </div>
+    </div>
+  );
+}
+
 function CartLineItem({
   line,
+  isPending,
   onUpdate,
   onRemove,
 }: {
   line: ShopifyCartLine;
+  isPending: boolean;
   onUpdate: (quantity: number) => void;
   onRemove: () => void;
 }) {
@@ -142,24 +203,27 @@ function CartLineItem({
           <div className="flex items-center gap-2 bg-card border border-border rounded-full px-2 py-1">
             <button
               type="button"
+              disabled={isPending}
               onClick={() => onUpdate(line.quantity - 1)}
-              className="w-6 h-6 rounded-full hover:bg-muted transition-colors flex items-center justify-center"
+              className="w-6 h-6 rounded-full hover:bg-muted transition-colors flex items-center justify-center disabled:opacity-50 disabled:pointer-events-none"
             >
               <Minus className="w-3 h-3" />
             </button>
             <span className="w-6 text-center text-sm">{line.quantity}</span>
             <button
               type="button"
+              disabled={isPending}
               onClick={() => onUpdate(line.quantity + 1)}
-              className="w-6 h-6 rounded-full hover:bg-muted transition-colors flex items-center justify-center"
+              className="w-6 h-6 rounded-full hover:bg-muted transition-colors flex items-center justify-center disabled:opacity-50 disabled:pointer-events-none"
             >
               <Plus className="w-3 h-3" />
             </button>
           </div>
           <button
             type="button"
+            disabled={isPending}
             onClick={onRemove}
-            className="text-sm text-muted-foreground hover:text-destructive transition-colors"
+            className="text-sm text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50 disabled:pointer-events-none"
           >
             Remove
           </button>

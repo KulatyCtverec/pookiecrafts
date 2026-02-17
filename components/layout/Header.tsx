@@ -5,6 +5,7 @@ import { Menu, X } from "lucide-react";
 import { CartIcon } from "@/components/cart/CartIcon";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import NextImage from "next/image";
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -22,7 +23,7 @@ export function Header() {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           <Link href="/" className="flex items-center">
-            <h1 className="text-3xl text-primary">PookieCrafts</h1>
+            <NextImage src="/logo_pookie.svg" alt="" width={200} height={100} />
           </Link>
 
           <div className="hidden md:flex items-center gap-8">

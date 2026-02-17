@@ -1,19 +1,21 @@
-import { Link } from 'react-router';
+'use client';
+import Link from 'next/link';
+import React from 'react';
 import { Button } from '../components/design-system/Button';
 import { ProductCard } from '../components/design-system/ProductCard';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { getBestsellers } from '../data/products';
 import { Star, Sparkles, Heart } from 'lucide-react';
 
-export function Home() {
+export default function Home() {
   const bestsellers = getBestsellers();
-  
+
   const reviews = [
     { name: 'Emily R.', text: 'The candles smell absolutely divine! Best purchase ever.', rating: 5 },
     { name: 'Sarah M.', text: 'Beautiful notebooks, perfect quality. I love them!', rating: 5 },
     { name: 'Jessica L.', text: 'Such cute packaging and amazing scents. Highly recommend!', rating: 5 },
   ];
-  
+
   return (
     <div className="w-full">
       {/* Hero Section */}
@@ -34,16 +36,16 @@ export function Home() {
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" asChild>
-                  <Link to="/shop">Shop Now</Link>
+                  <Link href="/shop">Shop Now</Link>
                 </Button>
                 <Button variant="secondary" size="lg" asChild>
-                  <Link to="/about">Our Story</Link>
+                  <Link href="/about">Our Story</Link>
                 </Button>
               </div>
             </div>
             <div className="relative">
               <div className="rounded-3xl overflow-hidden shadow-2xl">
-                <ImageWithFallback 
+                <ImageWithFallback
                   src="https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3p5JTIwaG9tZSUyMGNhbmRsZXMlMjBhZXN0aGV0aWN8ZW58MXx8fHwxNzcxMTc0MzYzfDA&ixlib=rb-4.1.0&q=80&w=1080"
                   alt="Cozy candles"
                   className="w-full h-[500px] object-cover"
@@ -53,7 +55,7 @@ export function Home() {
           </div>
         </div>
       </section>
-      
+
       {/* Bestsellers */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-12">
@@ -67,27 +69,27 @@ export function Home() {
         </div>
         <div className="text-center mt-12">
           <Button size="lg" asChild>
-            <Link to="/shop">View All Products</Link>
+            <Link href="/shop">View All Products</Link>
           </Button>
         </div>
       </section>
-      
+
       {/* Brand Story */}
       <section className="bg-gradient-to-b from-background to-[#FFF4E6] py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <Heart className="w-12 h-12 text-accent mx-auto" />
           <h2 className="text-4xl">Made with Love & Care</h2>
           <p className="text-lg text-muted-foreground">
-            Every candle is hand-poured and every notebook is carefully bound by hand. 
-            We believe in creating products that bring joy and comfort to your daily life. 
+            Every candle is hand-poured and every notebook is carefully bound by hand.
+            We believe in creating products that bring joy and comfort to your daily life.
             Our small-batch approach ensures quality and attention to detail in every piece.
           </p>
           <Button variant="secondary" size="lg" asChild>
-            <Link to="/about">Read Our Story</Link>
+            <Link href="/about">Read Our Story</Link>
           </Button>
         </div>
       </section>
-      
+
       {/* Reviews */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-12">

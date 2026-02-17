@@ -6,7 +6,7 @@ import { Button } from "@/components/design-system/Button";
 import { QuantitySelector } from "@/components/design-system/QuantitySelector";
 import { VariantSelector } from "@/components/design-system/VariantSelector";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
-import { useCart } from "@/components/cart/CartProvider";
+import { useCart, type OptimisticCartLineSnapshot } from "@/components/cart/CartProvider";
 import { Truck, ArrowLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ShopifyProduct } from "@/lib/shopify";
@@ -24,7 +24,7 @@ function formatPrice(amount: string, currencyCode: string): string {
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const router = useRouter();
-  const { addItem, cartError } = useCart();
+  const { addItem, cartError, isPendingAdd } = useCart();
 
   const [selectedVariantId, setSelectedVariantId] = useState(
     product.variants.nodes[0]?.id ?? ""
@@ -60,7 +60,21 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return;
-    await addItem(selectedVariant.id, quantity);
+    const snapshot: OptimisticCartLineSnapshot = {
+      variantId: selectedVariant.id,
+      quantity,
+      productTitle: product.title,
+      variantTitle:
+        selectedVariant.selectedOptions
+          ?.map((o) => o.value)
+          .filter(Boolean)
+          .join(" / ") || selectedVariant.title,
+      price: selectedVariant.price?.amount ?? "0",
+      currencyCode: selectedVariant.price?.currencyCode ?? "USD",
+      image: product.featuredImage?.url ?? product.images?.nodes?.[0]?.url ?? null,
+      handle: product.handle,
+    };
+    await addItem(selectedVariant.id, quantity, snapshot);
   };
 
   const price = selectedVariant?.price ?? product.priceRange.minVariantPrice;
@@ -158,11 +172,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
                   size="lg"
                   className="flex-1"
                   onClick={handleAddToCart}
-                  disabled={!selectedVariant?.availableForSale}
+                  disabled={!selectedVariant?.availableForSale || isPendingAdd}
                 >
-                  {selectedVariant?.availableForSale
-                    ? "Add to Cart"
-                    : "Out of Stock"}
+                  {!selectedVariant?.availableForSale
+                    ? "Out of Stock"
+                    : isPendingAdd
+                      ? "Adding…"
+                      : "Add to Cart"}
                 </Button>
               </div>
             </div>
@@ -194,11 +210,13 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           size="lg"
           className="w-full"
           onClick={handleAddToCart}
-          disabled={!selectedVariant?.availableForSale}
+          disabled={!selectedVariant?.availableForSale || isPendingAdd}
         >
-          {selectedVariant?.availableForSale
-            ? `Add to Cart - ${formatPrice(price.amount, currency)}`
-            : "Out of Stock"}
+          {!selectedVariant?.availableForSale
+            ? "Out of Stock"
+            : isPendingAdd
+              ? "Adding…"
+              : `Add to Cart - ${formatPrice(price.amount, currency)}`}
         </Button>
       </div>
     </div>

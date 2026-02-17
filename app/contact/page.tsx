@@ -53,10 +53,10 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-1">Email</h3>
                   <a
-                    href="mailto:hello@pookiecrafts.com"
+                    href="mailto:pookie.crafts909@gmail.com"
                     className="text-muted-foreground hover:text-accent transition-colors"
                   >
-                    hello@pookiecrafts.com
+                    pookie.crafts909@gmail.com
                   </a>
                 </div>
               </div>
@@ -67,9 +67,7 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-1">Location</h3>
                   <p className="text-muted-foreground">
-                    Portland, Oregon
-                    <br />
-                    United States
+                    Prague, Czechia
                   </p>
                 </div>
               </div>
@@ -80,12 +78,12 @@ export default function ContactPage() {
                 <div>
                   <h3 className="font-semibold mb-1">Social</h3>
                   <a
-                    href="https://instagram.com/pookiecrafts"
+                    href="https://instagram.com/pookie.crafts.store"
                     className="text-muted-foreground hover:text-accent transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    @pookiecrafts
+                    pookie.crafts.store
                   </a>
                 </div>
               </div>

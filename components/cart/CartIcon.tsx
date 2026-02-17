@@ -4,9 +4,12 @@ import { ShoppingBag } from "lucide-react";
 import { useCart } from "./CartProvider";
 
 export function CartIcon() {
-  const { cart, openCart } = useCart();
-  const totalItems =
+  const { cart, optimisticLines, openCart } = useCart();
+  const cartItems =
     cart?.lines?.nodes?.reduce((s, l) => s + l.quantity, 0) ?? 0;
+  const optimisticItems =
+    optimisticLines.reduce((s, l) => s + l.quantity, 0) ?? 0;
+  const totalItems = cartItems + optimisticItems;
 
   return (
     <button

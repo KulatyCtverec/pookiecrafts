@@ -14,6 +14,7 @@ export interface ShopifyCollection {
   id: string;
   title: string;
   handle: string;
+  image?: ShopifyImage | null;
 }
 
 export interface ShopifyProductVariant {

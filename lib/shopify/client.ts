@@ -73,6 +73,11 @@ function getStorefrontConfig(): {
       console.error(
         "Missing Shopify config. Set NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN (or SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN on server) in .env.local."
       );
+    } else if (typeof process !== "undefined") {
+      // Produkce (Vercel): jednou zaloguj, ať je v deploy logu vidět, proč se data nenačítají
+      console.warn(
+        "[Shopify] Config missing in production. Add env vars in Vercel: NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN, NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN (or SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN), then redeploy."
+      );
     }
     return { url: "", headerName: "", token: "", configured: false };
   }

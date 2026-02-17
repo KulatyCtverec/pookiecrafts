@@ -1,4 +1,5 @@
 import Link from "next/link";
+import NextImage from "next/image";
 import { Heart, Instagram, Mail } from "lucide-react";
 
 export function Footer() {
@@ -7,7 +8,14 @@ export function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
           <div className="space-y-4">
-            <h3 className="text-2xl text-primary">PookieCrafts</h3>
+            <Link href="/" className="inline-block">
+              <NextImage
+                src="/logo_pookie.svg"
+                alt="PookieCrafts"
+                width={200}
+                height={100}
+              />
+            </Link>
             <p className="text-muted-foreground text-sm">
               Handcrafted candles & notebooks made with love
             </p>

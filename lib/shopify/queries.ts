@@ -5,6 +5,12 @@ export const COLLECTIONS_QUERY = `
         id
         title
         handle
+        image {
+          url
+          altText
+          width
+          height
+        }
       }
     }
   }

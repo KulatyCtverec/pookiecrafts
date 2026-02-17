@@ -42,4 +42,14 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
+**Shopify na produkci:** Aby se na Vercelu načítala data (produkty, kolekce), musíš v projektu nastavit env proměnné:
+
+1. Vercel → tvůj projekt → **Settings** → **Environment Variables**.
+2. Přidej (pro **Production**, případně i Preview):
+   - `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` = tvoje doména (např. `obchod.myshopify.com`)
+   - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN` = Storefront API token (public)
+   - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION` = např. `2025-04`
+   - volitelně: `SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN` = private token (pouze server)
+3. **Důležité:** Po přidání nebo změně env spusť **nový deploy** (Deployments → … u posledního deploye → Redeploy). Proměnné `NEXT_PUBLIC_*` se vkládají při buildu, takže bez nového buildu zůstanou prázdné.
+
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

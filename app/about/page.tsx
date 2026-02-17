@@ -1,14 +1,10 @@
-import { Heart, Sparkles } from "lucide-react";
-import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
+import { Heart } from "lucide-react";
+import NextImage from "next/image";
 
 export default function AboutPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div className="text-center mb-16 space-y-6">
-        <div className="inline-flex items-center gap-2 bg-secondary px-4 py-2 rounded-full">
-          <Sparkles className="w-4 h-4 text-accent" />
-          <span className="text-sm">Our Story</span>
-        </div>
+      <div className="text-center mb-16 space-y-4">
         <h1 className="text-4xl md:text-5xl">About PookieCrafts</h1>
         <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           Handcrafted with love, designed to bring warmth and joy to your
@@ -17,10 +13,14 @@ export default function AboutPage() {
       </div>
 
       <div className="rounded-3xl overflow-hidden mb-16 shadow-lg">
-        <ImageWithFallback
-          src="https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxjb3p5JTIwaG9tZSUyMGNhbmRsZXMlMjBhZXN0aGV0aWN8ZW58MXx8fHwxNzcxMTc0MzYzfDA&ixlib=rb-4.1.0&q=80&w=1080"
+        <NextImage
+          src="/about-candles.jpeg"
           alt="PookieCrafts workspace"
+          width={1200}
+          height={400}
           className="w-full h-[400px] object-cover"
+          sizes="(min-width: 1024px) 1200px, 100vw"
+          priority
         />
       </div>
 
@@ -48,26 +48,26 @@ export default function AboutPage() {
           <h2 className="text-2xl mb-4">Our Values</h2>
           <div className="grid sm:grid-cols-2 gap-6">
             <div>
-              <h3 className="text-lg font-semibold mb-2">✨ Handmade Quality</h3>
+              <h3 className="text-lg font-semibold mb-2">Handmade Quality</h3>
               <p className="text-muted-foreground">
                 Every product is crafted by hand in small batches to ensure the
                 highest quality.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">🌿 Natural Materials</h3>
+              <h3 className="text-lg font-semibold mb-2">Natural Materials</h3>
               <p className="text-muted-foreground">
                 We use eco-friendly, sustainable materials whenever possible.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">💖 Made with Love</h3>
+              <h3 className="text-lg font-semibold mb-2">Made with Love</h3>
               <p className="text-muted-foreground">
                 Each item is created with care and attention to detail.
               </p>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">🎁 Thoughtful Design</h3>
+              <h3 className="text-lg font-semibold mb-2">Thoughtful Design</h3>
               <p className="text-muted-foreground">
                 Beautiful aesthetics meet practical functionality.
               </p>
