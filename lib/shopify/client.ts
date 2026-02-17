@@ -10,7 +10,7 @@ import type {
   ShopifyProduct,
 } from "./types";
 
-// ——— Jediné místo konfigurace Storefront API ———
+// ——— Jediné místo konfigurace Storefront API ——
 // Public token: Headless channel / custom app Storefront token (X-Shopify-Storefront-Access-Token).
 // Private token (volitelně): pro server; hlavička Shopify-Storefront-Private-Token (doporučeno Hydrogen).
 // Viz: https://shopify.dev/docs/api/usage/authentication#access-tokens-for-the-storefront-api
