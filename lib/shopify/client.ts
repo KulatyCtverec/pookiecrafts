@@ -20,16 +20,37 @@ const PUBLIC_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN;
 const API_VERSION =
   process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION ?? "2024-10";
 
-/** Hydrogen React Storefront klient (pro budoucí použití hooků / komponent). */
-export const storefrontClient = createStorefrontClient({
-  storeDomain: STORE_DOMAIN ?? "",
-  storefrontApiVersion: API_VERSION,
-  publicStorefrontToken: PUBLIC_TOKEN ?? "",
-  // Na serveru Hydrogen doporučuje private token – odstraní varování a používá se pro serverové requesty
-  privateStorefrontToken:
-    typeof process !== "undefined"
-      ? process.env.SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN
-      : undefined,
+function hasValidConfig(): boolean {
+  const domain = STORE_DOMAIN?.trim();
+  const hasPublic = !!PUBLIC_TOKEN?.trim();
+  const hasPrivate =
+    typeof process !== "undefined" &&
+    !!process.env.SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN?.trim();
+  return !!(domain && (hasPublic || hasPrivate));
+}
+
+/** Hydrogen React Storefront klient (pro budoucí použití hooků / komponent). Inicializuje se až při platné konfiguraci, aby build na Vercelu nepadal. */
+let _storefrontClient: ReturnType<typeof createStorefrontClient> | null = null;
+function getStorefrontClientInstance(): ReturnType<typeof createStorefrontClient> {
+  if (_storefrontClient) return _storefrontClient;
+  if (!hasValidConfig()) {
+    return {} as ReturnType<typeof createStorefrontClient>;
+  }
+  _storefrontClient = createStorefrontClient({
+    storeDomain: STORE_DOMAIN ?? "",
+    storefrontApiVersion: API_VERSION,
+    publicStorefrontToken: PUBLIC_TOKEN ?? "",
+    privateStorefrontToken:
+      typeof process !== "undefined"
+        ? process.env.SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN
+        : undefined,
+  });
+  return _storefrontClient;
+}
+export const storefrontClient = new Proxy({} as ReturnType<typeof createStorefrontClient>, {
+  get(_, prop) {
+    return getStorefrontClientInstance()[prop as keyof ReturnType<typeof createStorefrontClient>];
+  },
 });
 
 /** Vrací URL, token a typ hlavičky pro Storefront API. Na serveru preferujeme private token. */
@@ -140,11 +161,7 @@ export async function shopifyFetch<T>({
 // ISR/SSG: při buildu bez env vracíme prázdné hodnoty, aby build nepadal.
 
 function isConfigured(): boolean {
-  const hasPublic = !!(STORE_DOMAIN && PUBLIC_TOKEN);
-  const hasPrivate =
-    typeof process !== "undefined" &&
-    !!process.env.SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN?.trim();
-  return !!(STORE_DOMAIN && (hasPublic || hasPrivate));
+  return hasValidConfig();
 }
 
 export async function getCollections(): Promise<ShopifyCollection[]> {
