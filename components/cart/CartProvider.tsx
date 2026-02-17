@@ -23,6 +23,8 @@ interface CartContextValue {
   cart: ShopifyCart | null;
   isLoading: boolean;
   isOpen: boolean;
+  /** Chybová zpráva z cart operací (create/add/update/remove). */
+  cartError: string | null;
   openCart: () => void;
   closeCart: () => void;
   addItem: (variantId: string, quantity?: number) => Promise<void>;
@@ -44,16 +46,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<ShopifyCart | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
+  const [cartError, setCartError] = useState<string | null>(null);
 
   const loadCart = useCallback(async (cartId: string) => {
     try {
       const c = await getCart(cartId);
       if (c) {
         setCart(c);
+        setCartError(null);
         return;
       }
     } catch {
-      // Cart may be invalid
+      // Cart may be invalid or API error
     }
     if (typeof window !== "undefined") {
       localStorage.removeItem(CART_ID_KEY);
@@ -65,20 +69,29 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     if (typeof window === "undefined") return null;
     const stored = localStorage.getItem(CART_ID_KEY);
     if (stored) {
-      const c = await getCart(stored);
-      if (c) {
-        setCart(c);
-        return stored;
+      try {
+        const c = await getCart(stored);
+        if (c) {
+          setCart(c);
+          setCartError(null);
+          return stored;
+        }
+      } catch {
+        // Invalid or expired cart
       }
       localStorage.removeItem(CART_ID_KEY);
     }
-    const newCart = await createCart();
-    if (newCart) {
+    try {
+      const newCart = await createCart();
       localStorage.setItem(CART_ID_KEY, newCart.id);
       setCart(newCart);
+      setCartError(null);
       return newCart.id;
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "Failed to create cart";
+      setCartError(msg);
+      return null;
     }
-    return null;
   }, []);
 
   useEffect(() => {
@@ -92,12 +105,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const addItem = useCallback(
     async (variantId: string, quantity: number = 1) => {
+      setCartError(null);
       const cartId = await ensureCart();
       if (!cartId) return;
-      const c = await addToCart(cartId, variantId, quantity);
-      if (c) {
+      try {
+        const c = await addToCart(cartId, variantId, quantity);
         setCart(c);
         setIsOpen(true);
+      } catch (e) {
+        setCartError(e instanceof Error ? e.message : "Failed to add to cart");
       }
     },
     [ensureCart]
@@ -106,13 +122,20 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const updateQuantity = useCallback(
     async (lineId: string, quantity: number) => {
       if (!cart?.id) return;
-      if (quantity <= 0) {
-        const c = await removeCartLine(cart.id, lineId);
-        if (c) setCart(c);
-        return;
+      setCartError(null);
+      try {
+        if (quantity <= 0) {
+          const c = await removeCartLine(cart.id, lineId);
+          setCart(c);
+        } else {
+          const c = await updateCartLine(cart.id, lineId, quantity);
+          setCart(c);
+        }
+      } catch (e) {
+        setCartError(
+          e instanceof Error ? e.message : "Failed to update cart"
+        );
       }
-      const c = await updateCartLine(cart.id, lineId, quantity);
-      if (c) setCart(c);
     },
     [cart?.id]
   );
@@ -120,8 +143,15 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const removeLine = useCallback(
     async (lineId: string) => {
       if (!cart?.id) return;
-      const c = await removeCartLine(cart.id, lineId);
-      if (c) setCart(c);
+      setCartError(null);
+      try {
+        const c = await removeCartLine(cart.id, lineId);
+        setCart(c);
+      } catch (e) {
+        setCartError(
+          e instanceof Error ? e.message : "Failed to remove from cart"
+        );
+      }
     },
     [cart?.id]
   );
@@ -131,13 +161,17 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       cart,
       isLoading,
       isOpen,
+      cartError,
       openCart: () => setIsOpen(true),
-      closeCart: () => setIsOpen(false),
+      closeCart: () => {
+        setIsOpen(false);
+        setCartError(null);
+      },
       addItem,
       updateQuantity,
       removeLine,
     }),
-    [cart, isLoading, isOpen, addItem, updateQuantity, removeLine]
+    [cart, isLoading, isOpen, cartError, addItem, updateQuantity, removeLine]
   );
 
   return (

@@ -1,4 +1,13 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).  
+E-commerce frontend uses **Shopify Storefront API** (headless); no custom backend or database.
+
+## Environment (Shopify)
+
+Copy `.env.local.example` to `.env.local` and set:
+
+- `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` – store domain (e.g. `your-store.myshopify.com`)
+- `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN` – **Storefront API** (public) token from Headless sales channel (not Admin API)
+- `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION` – e.g. `2025-04` ([Storefront API versions](https://shopify.dev/docs/api/storefront/latest))
 
 ## Getting Started
 

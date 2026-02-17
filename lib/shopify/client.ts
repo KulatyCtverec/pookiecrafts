@@ -1,3 +1,4 @@
+import { createStorefrontClient } from "@shopify/hydrogen-react";
 import {
   COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
@@ -9,29 +10,61 @@ import type {
   ShopifyProduct,
 } from "./types";
 
-const STOREFRONT_API_VERSION = "2024-07";
+// ——— Jediné místo konfigurace Storefront API ———
+// Public token: Headless channel / custom app Storefront token (X-Shopify-Storefront-Access-Token).
+// Private token (volitelně): pro server; hlavička Shopify-Storefront-Private-Token (doporučeno Hydrogen).
+// Viz: https://shopify.dev/docs/api/usage/authentication#access-tokens-for-the-storefront-api
 
-function getShopifyConfig(): { url: string; token: string; configured: boolean } {
-  const domain = process.env.SHOPIFY_STORE_DOMAIN;
-  const token = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN;
+const STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN;
+const PUBLIC_TOKEN = process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN;
+const API_VERSION =
+  process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION ?? "2024-10";
+
+/** Hydrogen React Storefront klient (pro budoucí použití hooků / komponent). */
+export const storefrontClient = createStorefrontClient({
+  storeDomain: STORE_DOMAIN ?? "",
+  storefrontApiVersion: API_VERSION,
+  publicStorefrontToken: PUBLIC_TOKEN ?? "",
+  // Na serveru Hydrogen doporučuje private token – odstraní varování a používá se pro serverové requesty
+  privateStorefrontToken:
+    typeof process !== "undefined"
+      ? process.env.SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN
+      : undefined,
+});
+
+/** Vrací URL, token a typ hlavičky pro Storefront API. Na serveru preferujeme private token. */
+function getStorefrontConfig(): {
+  url: string;
+  /** Název hlavičky: X-Shopify-Storefront-Access-Token (public) nebo Shopify-Storefront-Private-Token (private). */
+  headerName: string;
+  token: string;
+  configured: boolean;
+} {
+  const domain = STORE_DOMAIN?.trim();
+  // Na serveru (Node) má smysl použít private token, pokud je nastaven
+  const privateToken =
+    typeof process !== "undefined" &&
+    process.env.SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN?.trim();
+  const token = privateToken || PUBLIC_TOKEN?.trim();
 
   if (!domain || !token) {
     if (process.env.NODE_ENV === "development") {
       console.error(
-        "Missing SHOPIFY_STORE_DOMAIN or SHOPIFY_STOREFRONT_ACCESS_TOKEN. Add them to .env.local. Catalog will be empty."
+        "Missing Shopify config. Set NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN (or SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN on server) in .env.local."
       );
     }
-    return { url: "", token: "", configured: false };
+    return { url: "", headerName: "", token: "", configured: false };
   }
-
   let endpoint = domain;
-  if (endpoint && !endpoint.startsWith("http")) {
+  if (!endpoint.startsWith("http")) {
     endpoint = `https://${endpoint}`;
   }
   endpoint = endpoint.replace(/\/$/, "");
-  const url = `${endpoint}/api/${STOREFRONT_API_VERSION}/graphql.json`;
-
-  return { url, token, configured: true };
+  const url = `${endpoint}/api/${API_VERSION}/graphql.json`;
+  const headerName = privateToken
+    ? "Shopify-Storefront-Private-Token"
+    : "X-Shopify-Storefront-Access-Token";
+  return { url, headerName, token, configured: true };
 }
 
 export interface ShopifyFetchOptions {
@@ -39,6 +72,12 @@ export interface ShopifyFetchOptions {
   revalidate?: number;
 }
 
+/**
+ * Jediný helper pro volání Shopify Storefront API (GraphQL).
+ * POST na .../api/{version}/graphql.json.
+ * Na serveru: pokud je nastaven SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN, použije hlavičku
+ * Shopify-Storefront-Private-Token; jinak X-Shopify-Storefront-Access-Token (public).
+ */
 export async function shopifyFetch<T>({
   query,
   variables,
@@ -48,11 +87,17 @@ export async function shopifyFetch<T>({
   query: string;
   variables?: Record<string, unknown>;
 } & ShopifyFetchOptions): Promise<T> {
-  const { url, token, configured } = getShopifyConfig();
+  const { url, headerName, token, configured } = getStorefrontConfig();
+
+  if (!configured || !url) {
+    throw new Error(
+      "Shopify not configured. Set NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN and NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN (or SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN on server) in .env.local"
+    );
+  }
 
   const headers: Record<string, string> = {
     "Content-Type": "application/json",
-    "X-Shopify-Storefront-Access-Token": token,
+    [headerName]: token,
   };
 
   const fetchOptions: RequestInit = {
@@ -69,29 +114,37 @@ export async function shopifyFetch<T>({
     fetchOptions.cache = cache;
   }
 
-  if (!configured || !url) {
-    throw new Error(
-      "Shopify not configured. Set SHOPIFY_STORE_DOMAIN and SHOPIFY_STOREFRONT_ACCESS_TOKEN in .env.local"
-    );
-  }
-
   const res = await fetch(url, fetchOptions);
   const json = await res.json();
 
   if (!res.ok) {
-    throw new Error(`Shopify API error: ${res.status} ${JSON.stringify(json)}`);
+    const hint =
+      res.status === 401
+        ? " Check: token from Headless/custom app Storefront API (not Admin API); if using private token, set SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN and use header Shopify-Storefront-Private-Token."
+        : "";
+    throw new Error(
+      `Shopify API error: ${res.status} ${JSON.stringify(json)}.${hint}`
+    );
   }
 
-  if (json.errors) {
-    throw new Error(`Shopify GraphQL errors: ${JSON.stringify(json.errors)}`);
+  if (json.errors?.length) {
+    throw new Error(
+      `Shopify GraphQL errors: ${JSON.stringify(json.errors)}`
+    );
   }
 
   return json.data as T;
 }
 
-// Catalog queries (ISR/SSG) - return empty when Shopify not configured (e.g. build without env)
+// ——— Katalog (kolekce, produkty) ———
+// ISR/SSG: při buildu bez env vracíme prázdné hodnoty, aby build nepadal.
+
 function isConfigured(): boolean {
-  return !!(process.env.SHOPIFY_STORE_DOMAIN && process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN);
+  const hasPublic = !!(STORE_DOMAIN && PUBLIC_TOKEN);
+  const hasPrivate =
+    typeof process !== "undefined" &&
+    !!process.env.SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN?.trim();
+  return !!(STORE_DOMAIN && (hasPublic || hasPrivate));
 }
 
 export async function getCollections(): Promise<ShopifyCollection[]> {

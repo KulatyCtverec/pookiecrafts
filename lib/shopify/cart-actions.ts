@@ -10,7 +10,18 @@ import {
   CART_LINES_REMOVE_MUTATION,
 } from "./queries";
 
-export async function createCart(): Promise<ShopifyCart | null> {
+/** Storefront API vrací userErrors s field (pole) a message. Při chybě hodíme Error s textem pro UX. */
+function assertNoUserErrors(
+  userErrors: { field: string[]; message: string }[],
+  context: string
+): void {
+  if (userErrors.length > 0) {
+    const msg = userErrors[0]?.message ?? "Unknown error";
+    throw new Error(`${context}: ${msg}`);
+  }
+}
+
+export async function createCart(): Promise<ShopifyCart> {
   const data = await shopifyFetch<{
     cartCreate: {
       cart: ShopifyCart | null;
@@ -20,7 +31,10 @@ export async function createCart(): Promise<ShopifyCart | null> {
     query: CART_CREATE_MUTATION,
     cache: "no-store",
   });
-  if (data.cartCreate.userErrors.length > 0) return null;
+  assertNoUserErrors(data.cartCreate.userErrors, "Create cart");
+  if (!data.cartCreate.cart) {
+    throw new Error("Create cart: no cart returned");
+  }
   return data.cartCreate.cart;
 }
 
@@ -37,7 +51,7 @@ export async function addToCart(
   cartId: string,
   variantId: string,
   quantity: number = 1
-): Promise<ShopifyCart | null> {
+): Promise<ShopifyCart> {
   const data = await shopifyFetch<{
     cartLinesAdd: {
       cart: ShopifyCart | null;
@@ -51,7 +65,10 @@ export async function addToCart(
     },
     cache: "no-store",
   });
-  if (data.cartLinesAdd.userErrors.length > 0) return null;
+  assertNoUserErrors(data.cartLinesAdd.userErrors, "Add to cart");
+  if (!data.cartLinesAdd.cart) {
+    throw new Error("Add to cart: no cart returned");
+  }
   return data.cartLinesAdd.cart;
 }
 
@@ -59,7 +76,7 @@ export async function updateCartLine(
   cartId: string,
   lineId: string,
   quantity: number
-): Promise<ShopifyCart | null> {
+): Promise<ShopifyCart> {
   const data = await shopifyFetch<{
     cartLinesUpdate: {
       cart: ShopifyCart | null;
@@ -73,14 +90,17 @@ export async function updateCartLine(
     },
     cache: "no-store",
   });
-  if (data.cartLinesUpdate.userErrors.length > 0) return null;
+  assertNoUserErrors(data.cartLinesUpdate.userErrors, "Update cart line");
+  if (!data.cartLinesUpdate.cart) {
+    throw new Error("Update cart: no cart returned");
+  }
   return data.cartLinesUpdate.cart;
 }
 
 export async function removeCartLine(
   cartId: string,
   lineId: string
-): Promise<ShopifyCart | null> {
+): Promise<ShopifyCart> {
   const data = await shopifyFetch<{
     cartLinesRemove: {
       cart: ShopifyCart | null;
@@ -91,6 +111,9 @@ export async function removeCartLine(
     variables: { cartId, lineIds: [lineId] },
     cache: "no-store",
   });
-  if (data.cartLinesRemove.userErrors.length > 0) return null;
+  assertNoUserErrors(data.cartLinesRemove.userErrors, "Remove from cart");
+  if (!data.cartLinesRemove.cart) {
+    throw new Error("Remove from cart: no cart returned");
+  }
   return data.cartLinesRemove.cart;
 }

@@ -1,4 +1,10 @@
-export { shopifyFetch, getCollections, getCollectionByHandle, getProductByHandle } from "./client";
+export {
+  storefrontClient,
+  shopifyFetch,
+  getCollections,
+  getCollectionByHandle,
+  getProductByHandle,
+} from "./client";
 export {
   createCart,
   getCart,

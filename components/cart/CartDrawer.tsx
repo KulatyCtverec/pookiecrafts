@@ -14,7 +14,8 @@ function formatPrice(amount: string, currencyCode: string): string {
 }
 
 export function CartDrawer() {
-  const { cart, isOpen, closeCart, updateQuantity, removeLine } = useCart();
+  const { cart, isOpen, closeCart, updateQuantity, removeLine, cartError } =
+    useCart();
 
   if (!isOpen) return null;
 
@@ -50,6 +51,11 @@ export function CartDrawer() {
         </div>
 
         <div className="flex-1 overflow-y-auto p-6">
+          {cartError && (
+            <div className="mb-4 p-3 rounded-xl bg-destructive/10 text-destructive text-sm">
+              {cartError}
+            </div>
+          )}
           {lines.length === 0 ? (
             <div className="text-center py-12">
               <p className="text-muted-foreground mb-4">Your cart is empty</p>

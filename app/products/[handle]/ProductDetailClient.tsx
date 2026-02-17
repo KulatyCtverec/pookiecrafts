@@ -24,7 +24,7 @@ function formatPrice(amount: string, currencyCode: string): string {
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const router = useRouter();
-  const { addItem } = useCart();
+  const { addItem, cartError } = useCart();
 
   const [selectedVariantId, setSelectedVariantId] = useState(
     product.variants.nodes[0]?.id ?? ""
@@ -149,17 +149,22 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               <QuantitySelector value={quantity} onChange={setQuantity} />
             </div>
 
-            <div className="flex gap-3">
-              <Button
-                size="lg"
-                className="flex-1"
-                onClick={handleAddToCart}
-                disabled={!selectedVariant?.availableForSale}
-              >
-                {selectedVariant?.availableForSale
-                  ? "Add to Cart"
-                  : "Out of Stock"}
-              </Button>
+            <div className="flex flex-col gap-3">
+              {cartError && (
+                <p className="text-sm text-destructive">{cartError}</p>
+              )}
+              <div className="flex gap-3">
+                <Button
+                  size="lg"
+                  className="flex-1"
+                  onClick={handleAddToCart}
+                  disabled={!selectedVariant?.availableForSale}
+                >
+                  {selectedVariant?.availableForSale
+                    ? "Add to Cart"
+                    : "Out of Stock"}
+                </Button>
+              </div>
             </div>
           </div>
 
@@ -173,7 +178,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
           )}
 
           <div className="bg-muted rounded-2xl p-6 flex gap-4">
-            <Truck className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
+            <Truck className="w-6 h-6 text-accent shrink-0 mt-1" />
             <div>
               <h4 className="font-semibold mb-1">Free Shipping</h4>
               <p className="text-sm text-muted-foreground">
