@@ -26,26 +26,6 @@ export default function FAQPage() {
       answer:
         "Currently, we ship within the US only. We offer free shipping on orders over $50. Most orders ship within 1-2 business days and arrive within 3-5 business days.",
     },
-    {
-      question: "Can I return or exchange items?",
-      answer:
-        "Yes! We accept returns and exchanges within 30 days of purchase. Items must be unused and in original condition. Candles must be unburned with the seal intact.",
-    },
-    {
-      question: "Do you take custom orders?",
-      answer:
-        "We love custom orders! For bulk orders, special requests, or custom scents/designs, please contact us through our contact form. We'll work with you to create something special.",
-    },
-    {
-      question: "How should I care for my candle?",
-      answer:
-        "Always trim the wick to 1/4 inch before lighting. Allow the wax to melt completely to the edges on first burn. Never burn for more than 4 hours at a time. Keep away from drafts and flammable objects.",
-    },
-    {
-      question: "Are the notebooks refillable?",
-      answer:
-        "Our notebooks are not refillable, but they are made to last! The durable binding and quality paper ensure your notebook will hold up beautifully through everyday use.",
-    },
   ];
 
   return (

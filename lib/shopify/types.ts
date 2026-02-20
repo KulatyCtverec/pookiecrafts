@@ -25,6 +25,16 @@ export interface ShopifyProductVariant {
   selectedOptions: { name: string; value: string }[];
 }
 
+export interface ShopifyProductOptionValue {
+  name: string;
+  swatch?: { color?: string } | null;
+}
+
+export interface ShopifyProductOption {
+  name: string;
+  optionValues: ShopifyProductOptionValue[];
+}
+
 export interface ShopifyProduct {
   id: string;
   title: string;
@@ -32,6 +42,7 @@ export interface ShopifyProduct {
   description: string;
   featuredImage: ShopifyImage | null;
   images: { nodes: ShopifyImage[] };
+  options?: ShopifyProductOption[];
   variants: { nodes: ShopifyProductVariant[] };
   priceRange: {
     minVariantPrice: ShopifyMoney;

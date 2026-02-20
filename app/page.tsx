@@ -35,11 +35,11 @@ export default async function Home() {
     carouselImagesRaw.length > 0
       ? carouselImagesRaw
       : [
-          {
-            url: "https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-            alt: "Cozy candles",
-          },
-        ];
+        {
+          url: "https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+          alt: "Cozy candles",
+        },
+      ];
 
   const browseCards = collections.map((c) => ({
     id: c.id,

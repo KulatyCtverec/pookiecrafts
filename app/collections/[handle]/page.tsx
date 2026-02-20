@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getCollectionByHandle } from "@/lib/shopify";
 import { ProductCard } from "@/components/design-system/ProductCard";
+import { BackButton } from "@/components/design-system/BackButton";
 
 interface CollectionPageProps {
   params: Promise<{ handle: string }>;
@@ -25,6 +26,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <BackButton />
       <div className="mb-12">
         <h1 className="text-4xl md:text-5xl mb-4">{collection.title}</h1>
         <p className="text-muted-foreground text-lg">

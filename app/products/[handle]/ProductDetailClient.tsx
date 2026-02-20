@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Button } from "@/components/design-system/Button";
 import { QuantitySelector } from "@/components/design-system/QuantitySelector";
 import { VariantSelector } from "@/components/design-system/VariantSelector";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
 import { useCart, type OptimisticCartLineSnapshot } from "@/components/cart/CartProvider";
-import { Truck, ArrowLeft } from "lucide-react";
+import { Truck } from "lucide-react";
+import { BackButton } from "@/components/design-system/BackButton";
 import { cn } from "@/lib/utils";
 import type { ShopifyProduct } from "@/lib/shopify";
 
@@ -22,8 +22,22 @@ function formatPrice(amount: string, currencyCode: string): string {
   }).format(parseFloat(amount));
 }
 
+function getSwatchHex(
+  product: ShopifyProduct,
+  colorOptionName: string,
+  colorValue: string
+): string {
+  const option = product.options?.find(
+    (o) => o.name.toLowerCase() === colorOptionName.toLowerCase()
+  );
+  const optionValue = option?.optionValues?.find(
+    (ov) => ov.name.trim().toLowerCase() === colorValue.trim().toLowerCase()
+  );
+  const hex = optionValue?.swatch?.color;
+  return hex && /^#[0-9A-Fa-f]{6}$/.test(hex) ? hex : "#a1a1aa";
+}
+
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
-  const router = useRouter();
   const { addItem, cartError, isPendingAdd } = useCart();
 
   const [selectedVariantId, setSelectedVariantId] = useState(
@@ -58,6 +72,36 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
         ).filter((s) => s)
       : product.variants.nodes.map((v) => v.title);
 
+  const colorOptionCandidates = ["color", "colour", "barva", "farba"];
+  const optionNamesFromProduct =
+    product.options?.map((o) => o.name) ?? uniqueOptionNames;
+  const colorOptionName =
+    optionNamesFromProduct.find((name) =>
+      colorOptionCandidates.includes(name?.toLowerCase() ?? "")
+    ) ??
+    product.variants.nodes[0]?.selectedOptions.find((o) =>
+      colorOptionCandidates.includes(o.name?.toLowerCase() ?? "")
+    )?.name ??
+    (optionNamesFromProduct.length === 1 &&
+    !["size", "velikost", "title"].includes(optionNamesFromProduct[0]?.toLowerCase() ?? "")
+      ? optionNamesFromProduct[0]
+      : undefined);
+  const colorVariants = colorOptionName
+    ? product.variants.nodes.map((v) => {
+        const colorVal = v.selectedOptions.find(
+          (o) => o.name === colorOptionName
+        )?.value;
+        return colorVal ? { colorValue: colorVal, variantId: v.id } : null;
+      }).filter(Boolean) as { colorValue: string; variantId: string }[]
+    : [];
+  const uniqueColors = colorVariants.reduce(
+    (acc, c) => {
+      if (!acc.some((x) => x.colorValue === c.colorValue)) acc.push(c);
+      return acc;
+    },
+    [] as { colorValue: string; variantId: string }[]
+  );
+
   const handleAddToCart = async () => {
     if (!selectedVariant?.id) return;
     const snapshot: OptimisticCartLineSnapshot = {
@@ -82,14 +126,7 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-      <button
-        type="button"
-        onClick={() => router.back()}
-        className="flex items-center gap-2 text-muted-foreground hover:text-accent transition-colors mb-8"
-      >
-        <ArrowLeft className="w-4 h-4" />
-        Back
-      </button>
+      <BackButton />
 
       <div className="grid md:grid-cols-2 gap-12 mb-16">
         <div className="space-y-4">
@@ -132,6 +169,61 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
               {formatPrice(price.amount, currency)}
             </p>
           </div>
+
+          {uniqueColors.length > 0 && (
+            <div className="flex items-center gap-3 flex-wrap">
+              <span className="text-sm text-muted-foreground">Color</span>
+              <div className="flex gap-2">
+                {uniqueColors.map(({ colorValue, variantId }) => {
+                  const isSelected = selectedVariantId === variantId;
+                  const hex =
+                    colorOptionName != null
+                      ? getSwatchHex(product, colorOptionName, colorValue)
+                      : "#a1a1aa";
+                  const selectColor = () => {
+                    const otherOptions = selectedVariant.selectedOptions.filter(
+                      (o) => o.name !== colorOptionName
+                    );
+                    const variant =
+                      product.variants.nodes.find((v) => {
+                        const vColor = v.selectedOptions.find(
+                          (o) => o.name === colorOptionName
+                        )?.value;
+                        if (vColor !== colorValue) return false;
+                        return otherOptions.every((opt) =>
+                          v.selectedOptions.some(
+                            (vo) =>
+                              vo.name === opt.name && vo.value === opt.value
+                          )
+                        );
+                      }) ??
+                      product.variants.nodes.find(
+                        (v) =>
+                          v.selectedOptions.find(
+                            (o) => o.name === colorOptionName
+                          )?.value === colorValue
+                      );
+                    if (variant) setSelectedVariantId(variant.id);
+                  };
+                  return (
+                    <button
+                      key={variantId}
+                      type="button"
+                      onClick={selectColor}
+                      title={colorValue}
+                      className={cn(
+                        "w-8 h-8 rounded-full border-2 transition-all shrink-0",
+                        isSelected
+                          ? "border-primary ring-2 ring-primary/30"
+                          : "border-border hover:border-accent"
+                      )}
+                      style={{ backgroundColor: hex }}
+                    />
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           {optionsForSelector.length > 1 && (
             <VariantSelector

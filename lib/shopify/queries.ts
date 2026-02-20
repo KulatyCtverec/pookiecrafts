@@ -66,6 +66,15 @@ export const PRODUCT_BY_HANDLE_QUERY = `
           height
         }
       }
+      options(first: 5) {
+        name
+        optionValues {
+          name
+          swatch {
+            color
+          }
+        }
+      }
       variants(first: 20) {
         nodes {
           id
