@@ -2,8 +2,10 @@
 
 import { ShoppingBag } from "lucide-react";
 import { useCart } from "./CartProvider";
+import { useTranslations } from "next-intl";
 
 export function CartIcon() {
+  const t = useTranslations("nav");
   const { cart, optimisticLines, openCart } = useCart();
   const cartItems =
     cart?.lines?.nodes?.reduce((s, l) => s + l.quantity, 0) ?? 0;
@@ -16,7 +18,7 @@ export function CartIcon() {
       type="button"
       onClick={openCart}
       className="relative p-2 hover:bg-muted rounded-full transition-colors"
-      aria-label="Open cart"
+      aria-label={t("openCart")}
     >
       <ShoppingBag className="w-6 h-6" />
       {totalItems > 0 && (

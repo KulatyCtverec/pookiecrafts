@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { ImageWithFallback } from "./ImageWithFallback";
 
 export interface ProductCardProduct {
@@ -12,10 +12,11 @@ export interface ProductCardProduct {
 
 interface ProductCardProps {
   product: ProductCardProduct;
+  locale?: string;
 }
 
-export function ProductCard({ product }: ProductCardProps) {
-  const priceFormatted = new Intl.NumberFormat("en-US", {
+export function ProductCard({ product, locale = "en" }: ProductCardProps) {
+  const priceFormatted = new Intl.NumberFormat(locale, {
     style: "currency",
     currency: product.currencyCode,
   }).format(parseFloat(product.price));

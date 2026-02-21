@@ -4,6 +4,12 @@
  */
 
 import type { ShopifyCart } from "./types";
+
+function toShopifyLanguage(locale?: string): string {
+  if (!locale || typeof locale !== "string") return "EN";
+  const code = locale.trim().toUpperCase().slice(0, 2);
+  return code || "EN";
+}
 import {
   CART_CREATE_MUTATION,
   CART_GET_QUERY,
@@ -68,13 +74,14 @@ function assertNoUserErrors(
   }
 }
 
-export async function createCart(): Promise<ShopifyCart> {
+export async function createCart(locale?: string): Promise<ShopifyCart> {
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetchClient<{
     cartCreate: {
       cart: ShopifyCart | null;
       userErrors: { field: string[]; message: string }[];
     };
-  }>(CART_CREATE_MUTATION);
+  }>(CART_CREATE_MUTATION, { language });
   assertNoUserErrors(data.cartCreate.userErrors, "Create cart");
   if (!data.cartCreate.cart) {
     throw new Error("Create cart: no cart returned");
@@ -82,10 +89,14 @@ export async function createCart(): Promise<ShopifyCart> {
   return data.cartCreate.cart;
 }
 
-export async function getCart(cartId: string): Promise<ShopifyCart | null> {
+export async function getCart(
+  cartId: string,
+  locale?: string
+): Promise<ShopifyCart | null> {
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetchClient<{ cart: ShopifyCart | null }>(
     CART_GET_QUERY,
-    { cartId }
+    { cartId, language }
   );
   return data.cart;
 }
@@ -93,8 +104,10 @@ export async function getCart(cartId: string): Promise<ShopifyCart | null> {
 export async function addToCart(
   cartId: string,
   variantId: string,
-  quantity: number = 1
+  quantity: number = 1,
+  locale?: string
 ): Promise<ShopifyCart> {
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetchClient<{
     cartLinesAdd: {
       cart: ShopifyCart | null;
@@ -103,6 +116,7 @@ export async function addToCart(
   }>(CART_LINES_ADD_MUTATION, {
     cartId,
     lines: [{ merchandiseId: variantId, quantity }],
+    language,
   });
   assertNoUserErrors(data.cartLinesAdd.userErrors, "Add to cart");
   if (!data.cartLinesAdd.cart) {
@@ -114,8 +128,10 @@ export async function addToCart(
 export async function updateCartLine(
   cartId: string,
   lineId: string,
-  quantity: number
+  quantity: number,
+  locale?: string
 ): Promise<ShopifyCart> {
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetchClient<{
     cartLinesUpdate: {
       cart: ShopifyCart | null;
@@ -124,6 +140,7 @@ export async function updateCartLine(
   }>(CART_LINES_UPDATE_MUTATION, {
     cartId,
     lines: [{ id: lineId, quantity }],
+    language,
   });
   assertNoUserErrors(data.cartLinesUpdate.userErrors, "Update cart line");
   if (!data.cartLinesUpdate.cart) {
@@ -134,14 +151,20 @@ export async function updateCartLine(
 
 export async function removeCartLine(
   cartId: string,
-  lineId: string
+  lineId: string,
+  locale?: string
 ): Promise<ShopifyCart> {
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetchClient<{
     cartLinesRemove: {
       cart: ShopifyCart | null;
       userErrors: { field: string[]; message: string }[];
     };
-  }>(CART_LINES_REMOVE_MUTATION, { cartId, lineIds: [lineId] });
+  }>(CART_LINES_REMOVE_MUTATION, {
+    cartId,
+    lineIds: [lineId],
+    language,
+  });
   assertNoUserErrors(data.cartLinesRemove.userErrors, "Remove from cart");
   if (!data.cartLinesRemove.cart) {
     throw new Error("Remove from cart: no cart returned");

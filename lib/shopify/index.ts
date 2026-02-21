@@ -4,7 +4,9 @@ export {
   getCollections,
   getCollectionByHandle,
   getProductByHandle,
+  getProductsByType,
 } from "./client";
+export type { ShopifyProductForColor } from "./client";
 export {
   createCart,
   getCart,

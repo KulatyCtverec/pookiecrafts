@@ -22,6 +22,7 @@ export interface ShopifyProductVariant {
   title: string;
   availableForSale: boolean;
   price: ShopifyMoney;
+  image?: ShopifyImage | null;
   selectedOptions: { name: string; value: string }[];
 }
 
@@ -39,6 +40,7 @@ export interface ShopifyProduct {
   id: string;
   title: string;
   handle: string;
+  productType?: string;
   description: string;
   featuredImage: ShopifyImage | null;
   images: { nodes: ShopifyImage[] };

@@ -2,7 +2,9 @@ import { createStorefrontClient } from "@shopify/hydrogen-react";
 import {
   COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
+  LOCALIZATION_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
+  PRODUCTS_BY_TYPE_QUERY,
 } from "./queries";
 import type {
   ShopifyCollection,
@@ -140,7 +142,12 @@ export async function shopifyFetch<T>({
     fetchOptions.cache = cache;
   }
 
-  const res = await fetch(url, fetchOptions);
+  // Next.js fetch cache key = URL only. Same URL with different language in body returns same cache.
+  // Append language to URL so each locale gets its own cache entry.
+  const lang = variables?.language as string | undefined;
+  const fetchUrl = lang ? `${url}?lang=${encodeURIComponent(lang)}` : url;
+
+  const res = await fetch(fetchUrl, fetchOptions);
   const json = await res.json();
 
   if (!res.ok) {
@@ -162,6 +169,37 @@ export async function shopifyFetch<T>({
   return json.data as T;
 }
 
+/** Map app locale (lowercase) to Shopify LanguageCode (uppercase). Defaults to EN. */
+function toShopifyLanguage(locale?: string): string {
+  if (!locale || typeof locale !== "string") return "EN";
+  const code = locale.trim().toUpperCase().slice(0, 2);
+  return code || "EN";
+}
+
+export interface ShopifyLanguage {
+  isoCode: string;
+  endonymName: string;
+}
+
+/** Get available languages from Shopify. Returns [] on error. */
+export async function getAvailableLanguages(
+  country?: string
+): Promise<ShopifyLanguage[]> {
+  if (!isConfigured()) return [];
+  try {
+    const data = await shopifyFetch<{
+      localization: { availableLanguages: ShopifyLanguage[] };
+    }>({
+      query: LOCALIZATION_QUERY,
+      variables: country ? { country: country.toUpperCase() } : {},
+      revalidate: 3600,
+    });
+    return data.localization?.availableLanguages ?? [];
+  } catch {
+    return [];
+  }
+}
+
 // ——— Katalog (kolekce, produkty) ———
 // ISR/SSG: při buildu bez env vracíme prázdné hodnoty, aby build nepadal.
 
@@ -169,41 +207,71 @@ function isConfigured(): boolean {
   return hasValidConfig();
 }
 
-export async function getCollections(): Promise<ShopifyCollection[]> {
+export async function getCollections(
+  locale?: string
+): Promise<ShopifyCollection[]> {
   if (!isConfigured()) return [];
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetch<{
     collections: { nodes: ShopifyCollection[] };
   }>({
     query: COLLECTIONS_QUERY,
+    variables: { language },
     revalidate: 300,
   });
   return data.collections.nodes;
 }
 
 export async function getCollectionByHandle(
-  handle: string
+  handle: string,
+  locale?: string
 ): Promise<ShopifyCollectionWithProducts | null> {
   if (!isConfigured()) return null;
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetch<{
     collection: ShopifyCollectionWithProducts | null;
   }>({
     query: COLLECTION_BY_HANDLE_QUERY,
-    variables: { handle },
+    variables: { handle, language },
     revalidate: 300,
   });
   return data.collection;
 }
 
 export async function getProductByHandle(
-  handle: string
+  handle: string,
+  locale?: string
 ): Promise<ShopifyProduct | null> {
   if (!isConfigured()) return null;
+  const language = toShopifyLanguage(locale);
   const data = await shopifyFetch<{
     product: ShopifyProduct | null;
   }>({
     query: PRODUCT_BY_HANDLE_QUERY,
-    variables: { handle },
+    variables: { handle, language },
     revalidate: 300,
   });
   return data.product;
+}
+
+export type ShopifyProductForColor = Pick<
+  ShopifyProduct,
+  "id" | "handle" | "title" | "options"
+>;
+
+export async function getProductsByType(
+  productType: string,
+  locale?: string
+): Promise<ShopifyProductForColor[]> {
+  if (!isConfigured() || !productType.trim()) return [];
+  const query = `product_type:"${productType.replace(/"/g, '\\"')}"`;
+  const language = toShopifyLanguage(locale);
+  const data = await shopifyFetch<{
+    products: { nodes: ShopifyProductForColor[] };
+  }>({
+    query: PRODUCTS_BY_TYPE_QUERY,
+    variables: { query, language },
+    revalidate: 300,
+  });
+  return data.products?.nodes ?? [];
 }

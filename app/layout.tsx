@@ -1,10 +1,7 @@
 import type { Metadata } from "next";
+import { headers } from "next/headers";
 import { DM_Serif_Display, Nunito } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { CartProvider } from "@/components/cart/CartProvider";
-import { CartDrawer } from "@/components/cart/CartDrawer";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-dm-serif",
@@ -22,22 +19,24 @@ export const metadata: Metadata = {
   description: "Handcrafted candles and notebooks made with love",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const headersList = await headers();
+  const locale = headersList.get("x-next-intl-locale") ?? "en";
   return (
-    <html lang="en">
+    <html lang={locale} suppressHydrationWarning>
+      <head>
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/flag-icons@7.2.3/css/flag-icons.min.css"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className={`${dmSerif.variable} ${nunito.variable} font-sans antialiased`}>
-        <CartProvider>
-          <div className="min-h-screen flex flex-col">
-            <Header />
-            <main className="flex-1">{children}</main>
-            <Footer />
-            <CartDrawer />
-          </div>
-        </CartProvider>
+        {children}
       </body>
     </html>
   );

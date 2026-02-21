@@ -1,21 +1,24 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Menu, X } from "lucide-react";
 import { CartIcon } from "@/components/cart/CartIcon";
+import { LanguageSelector } from "@/components/layout/LanguageSelector";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 import NextImage from "next/image";
+import { useTranslations } from "next-intl";
 
 export function Header() {
+  const t = useTranslations("nav");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navigation = [
-    { name: "Home", href: "/" },
-    { name: "Collections", href: "/collections" },
-    { name: "About", href: "/about" },
-    { name: "FAQ", href: "/faq" },
-    { name: "Contact", href: "/contact" },
+    { name: t("home"), href: "/" },
+    { name: t("collections"), href: "/collections" },
+    { name: t("about"), href: "/about" },
+    { name: t("faq"), href: "/faq" },
+    { name: t("contact"), href: "/contact" },
   ];
 
   return (
@@ -29,7 +32,7 @@ export function Header() {
           <div className="hidden md:flex items-center gap-8">
             {navigation.map((item) => (
               <Link
-                key={item.name}
+                key={item.href}
                 href={item.href}
                 className="text-foreground hover:text-accent transition-colors font-medium"
               >
@@ -39,12 +42,13 @@ export function Header() {
           </div>
 
           <div className="flex items-center gap-2">
+            <LanguageSelector />
             <CartIcon />
             <button
               type="button"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="md:hidden p-2 hover:bg-muted rounded-full transition-colors"
-              aria-label="Toggle menu"
+              aria-label={t("toggleMenu")}
             >
               {mobileMenuOpen ? (
                 <X className="w-6 h-6" />
@@ -64,7 +68,7 @@ export function Header() {
           <div className="flex flex-col gap-4">
             {navigation.map((item) => (
               <Link
-                key={item.name}
+                key={item.href}
                 href={item.href}
                 className="text-foreground hover:text-accent transition-colors font-medium py-2"
                 onClick={() => setMobileMenuOpen(false)}

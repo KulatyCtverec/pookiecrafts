@@ -1,15 +1,22 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/design-system/Button";
 import { ProductCard } from "@/components/design-system/ProductCard";
 import { HeroCarousel } from "@/components/design-system/HeroCarousel";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
 import { getCollections, getCollectionByHandle } from "@/lib/shopify";
 import { Star, Heart } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
-export default async function Home() {
-  const collections = await getCollections();
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations("home");
+  const collections = await getCollections(locale);
   const collectionDetailsFirst4 = await Promise.all(
-    collections.slice(0, 4).map((c) => getCollectionByHandle(c.handle))
+    collections.slice(0, 4).map((c) => getCollectionByHandle(c.handle, locale))
   );
 
   const bestsellerProducts =
@@ -35,11 +42,11 @@ export default async function Home() {
     carouselImagesRaw.length > 0
       ? carouselImagesRaw
       : [
-        {
-          url: "https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-          alt: "Cozy candles",
-        },
-      ];
+          {
+            url: "https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+            alt: t("carouselAlt"),
+          },
+        ];
 
   const browseCards = collections.map((c) => ({
     id: c.id,
@@ -49,21 +56,9 @@ export default async function Home() {
   }));
 
   const reviews = [
-    {
-      name: "Emily R.",
-      text: "The candles smell absolutely divine! Best purchase ever.",
-      rating: 5,
-    },
-    {
-      name: "Sarah M.",
-      text: "Beautiful notebooks, perfect quality. I love them!",
-      rating: 5,
-    },
-    {
-      name: "Jessica L.",
-      text: "Such cute packaging and amazing scents. Highly recommend!",
-      rating: 5,
-    },
+    { name: t("review1Name"), text: t("review1Text"), rating: 5 },
+    { name: t("review2Name"), text: t("review2Text"), rating: 5 },
+    { name: t("review3Name"), text: t("review3Text"), rating: 5 },
   ];
 
   return (
@@ -73,19 +68,17 @@ export default async function Home() {
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6">
               <h1 className="text-4xl md:text-5xl lg:text-6xl">
-                Cozy Vibes, <br />
-                Handmade with Love
+                {t("heroTitle")}
               </h1>
               <p className="text-lg text-muted-foreground max-w-md">
-                Discover our collection of handcrafted candles and notebooks,
-                made to bring warmth and joy to your everyday moments.
+                {t("heroSubtitle")}
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" asChild>
-                  <a href="#bestsellers">Shop Now</a>
+                  <a href="#bestsellers">{t("shopNow")}</a>
                 </Button>
                 <Button variant="secondary" size="lg" asChild>
-                  <Link href="/about">Our Story</Link>
+                  <Link href="/about">{t("ourStory")}</Link>
                 </Button>
               </div>
             </div>
@@ -101,12 +94,16 @@ export default async function Home() {
         className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 scroll-mt-24"
       >
         <div className="text-center mb-12">
-          <h2 className="text-4xl mb-4">Bestsellers</h2>
-          <p className="text-muted-foreground">Our most loved products</p>
+          <h2 className="text-4xl mb-4">{t("bestsellers")}</h2>
+          <p className="text-muted-foreground">{t("bestsellersSubtitle")}</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {bestsellerProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+            <ProductCard
+              key={product.id}
+              product={product}
+              locale={locale}
+            />
           ))}
         </div>
       </section>
@@ -114,7 +111,7 @@ export default async function Home() {
       {browseCards.length > 0 && (
         <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center mb-8">
-            <h2 className="text-3xl mb-2">Browse Collections</h2>
+            <h2 className="text-3xl mb-2">{t("browseCollections")}</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {browseCards.map((card) => (
@@ -149,23 +146,20 @@ export default async function Home() {
       <section className="bg-linear-to-b from-background to-[#FFF4E6] py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <Heart className="w-12 h-12 text-accent mx-auto" />
-          <h2 className="text-4xl">Made with Love & Care</h2>
+          <h2 className="text-4xl">{t("madeWithLove")}</h2>
           <p className="text-lg text-muted-foreground">
-            Every candle is hand-poured and every notebook is carefully bound by
-            hand. We believe in creating products that bring joy and comfort to
-            your daily life. Our small-batch approach ensures quality and
-            attention to detail in every piece.
+            {t("madeWithLoveText")}
           </p>
           <Button variant="secondary" size="lg" asChild>
-            <Link href="/about">Read Our Story</Link>
+            <Link href="/about">{t("readOurStory")}</Link>
           </Button>
         </div>
       </section>
 
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-12">
-          <h2 className="text-4xl mb-4">What Our Customers Say</h2>
-          <p className="text-muted-foreground">Join our happy community!</p>
+          <h2 className="text-4xl mb-4">{t("customerSay")}</h2>
+          <p className="text-muted-foreground">{t("joinCommunity")}</p>
         </div>
         <div className="grid md:grid-cols-3 gap-6">
           {reviews.map((review, idx) => (

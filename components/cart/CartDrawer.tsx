@@ -6,15 +6,19 @@ import type { OptimisticCartLineSnapshot } from "./CartProvider";
 import { Button } from "@/components/design-system/Button";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
 import type { ShopifyCartLine } from "@/lib/shopify";
+import { useTranslations } from "next-intl";
+import { useLocale } from "next-intl";
 
-function formatPrice(amount: string, currencyCode: string): string {
-  return new Intl.NumberFormat("en-US", {
+function formatPrice(amount: string, currencyCode: string, locale: string): string {
+  return new Intl.NumberFormat(locale, {
     style: "currency",
     currency: currencyCode,
   }).format(parseFloat(amount));
 }
 
 export function CartDrawer() {
+  const t = useTranslations("cart");
+  const locale = useLocale();
   const {
     cart,
     optimisticLines,
@@ -55,12 +59,12 @@ export function CartDrawer() {
       />
       <div className="fixed right-0 top-0 h-full w-full max-w-md bg-card shadow-2xl z-50 flex flex-col">
         <div className="flex items-center justify-between p-6 border-b border-border">
-          <h2 className="text-2xl">Your Cart</h2>
+          <h2 className="text-2xl">{t("yourCart")}</h2>
           <button
             type="button"
             onClick={closeCart}
             className="w-10 h-10 rounded-full hover:bg-muted flex items-center justify-center transition-colors"
-            aria-label="Close cart"
+            aria-label={t("closeCart")}
           >
             <X className="w-5 h-5" />
           </button>
@@ -74,13 +78,13 @@ export function CartDrawer() {
           )}
           {!hasAnyLines ? (
             <div className="text-center py-12">
-              <p className="text-muted-foreground mb-4">Your cart is empty</p>
-              <Button onClick={closeCart}>Continue Shopping</Button>
+              <p className="text-muted-foreground mb-4">{t("empty")}</p>
+              <Button onClick={closeCart}>{t("continueShopping")}</Button>
             </div>
           ) : (
             <div className="space-y-4">
               {optimisticLines.map((opt) => (
-                <OptimisticLineItem key={`opt-${opt.variantId}`} line={opt} />
+                <OptimisticLineItem key={`opt-${opt.variantId}`} line={opt} locale={locale} t={t} />
               ))}
               {lines.map((line) => (
                 <CartLineItem
@@ -89,6 +93,8 @@ export function CartDrawer() {
                   isPending={isLinePending(line.id)}
                   onUpdate={(q) => updateQuantity(line.id, q)}
                   onRemove={() => removeLine(line.id)}
+                  locale={locale}
+                  t={t}
                 />
               ))}
             </div>
@@ -98,9 +104,9 @@ export function CartDrawer() {
         {hasAnyLines && (
           <div className="border-t border-border p-6 space-y-4">
             <div className="flex justify-between items-center">
-              <span className="text-lg">Subtotal</span>
+              <span className="text-lg">{t("subtotal")}</span>
               <span className="text-2xl font-semibold text-accent">
-                {formatPrice(String(total), currency)}
+                {formatPrice(String(total), currency, locale)}
               </span>
             </div>
             {cart?.checkoutUrl ? (
@@ -110,12 +116,12 @@ export function CartDrawer() {
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Checkout
+                  {t("checkout")}
                 </a>
               </Button>
             ) : (
               <Button size="lg" className="w-full" disabled>
-                Updating cart…
+                {t("updatingCart")}
               </Button>
             )}
             <button
@@ -123,7 +129,7 @@ export function CartDrawer() {
               onClick={closeCart}
               className="w-full text-center text-sm text-muted-foreground hover:text-foreground transition-colors"
             >
-              Continue Shopping
+              {t("continueShopping")}
             </button>
           </div>
         )}
@@ -132,7 +138,15 @@ export function CartDrawer() {
   );
 }
 
-function OptimisticLineItem({ line }: { line: OptimisticCartLineSnapshot }) {
+function OptimisticLineItem({
+  line,
+  locale,
+  t,
+}: {
+  line: OptimisticCartLineSnapshot;
+  locale: string;
+  t: (key: string) => string;
+}) {
   return (
     <div className="flex gap-4 bg-background rounded-2xl p-4 opacity-90">
       {line.image && (
@@ -148,12 +162,12 @@ function OptimisticLineItem({ line }: { line: OptimisticCartLineSnapshot }) {
           <p className="text-sm text-muted-foreground">{line.variantTitle}</p>
         )}
         <p className="text-accent font-semibold mt-1">
-          {formatPrice(line.price, line.currencyCode)}
+          {formatPrice(line.price, line.currencyCode, locale)}
         </p>
         <p className="text-sm text-muted-foreground mt-2">
           <span className="inline-flex items-center gap-1">
             <Loader2 className="w-3 h-3 animate-spin" />
-            Adding…
+            {t("adding")}
           </span>
         </p>
       </div>
@@ -166,11 +180,15 @@ function CartLineItem({
   isPending,
   onUpdate,
   onRemove,
+  locale,
+  t,
 }: {
   line: ShopifyCartLine;
   isPending: boolean;
   onUpdate: (quantity: number) => void;
   onRemove: () => void;
+  locale: string;
+  t: (key: string) => string;
 }) {
   const title = line.merchandise.product.title;
   const variantTitle =
@@ -197,7 +215,7 @@ function CartLineItem({
           <p className="text-sm text-muted-foreground">{variantTitle}</p>
         )}
         <p className="text-accent font-semibold mt-1">
-          {formatPrice(price, currency)}
+          {formatPrice(price, currency, locale)}
         </p>
         <div className="flex items-center gap-3 mt-2">
           <div className="flex items-center gap-2 bg-card border border-border rounded-full px-2 py-1">
@@ -225,7 +243,7 @@ function CartLineItem({
             onClick={onRemove}
             className="text-sm text-muted-foreground hover:text-destructive transition-colors disabled:opacity-50 disabled:pointer-events-none"
           >
-            Remove
+            {t("remove")}
           </button>
         </div>
       </div>

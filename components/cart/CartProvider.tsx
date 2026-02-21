@@ -65,7 +65,13 @@ export function useCart(): CartContextValue {
 
 const DEBOUNCE_MS = 400;
 
-export function CartProvider({ children }: { children: React.ReactNode }) {
+export function CartProvider({
+  children,
+  locale,
+}: {
+  children: React.ReactNode;
+  locale?: string;
+}) {
   const [cart, setCart] = useState<ShopifyCart | null>(null);
   const [optimisticLines, setOptimisticLines] = useState<OptimisticCartLineSnapshot[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -78,22 +84,25 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   const isLinePending = useCallback((lineId: string) => pendingLineIds.has(lineId), [pendingLineIds]);
 
-  const loadCart = useCallback(async (cartId: string) => {
-    try {
-      const c = await getCart(cartId);
-      if (c) {
-        setCart(c);
-        setCartError(null);
-        return;
+  const loadCart = useCallback(
+    async (cartId: string) => {
+      try {
+        const c = await getCart(cartId, locale);
+        if (c) {
+          setCart(c);
+          setCartError(null);
+          return;
+        }
+      } catch {
+        // Cart may be invalid or API error
       }
-    } catch {
-      // Cart may be invalid or API error
-    }
-    if (typeof window !== "undefined") {
-      localStorage.removeItem(CART_ID_KEY);
-    }
-    setCart(null);
-  }, []);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem(CART_ID_KEY);
+      }
+      setCart(null);
+    },
+    [locale]
+  );
 
   /** Returns cartId; if none stored, creates cart. Does NOT call getCart in add path. */
   const ensureCartId = useCallback(async (): Promise<string | null> => {
@@ -101,7 +110,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const stored = localStorage.getItem(CART_ID_KEY);
     if (stored) return stored;
     try {
-      const newCart = await createCart();
+      const newCart = await createCart(locale);
       localStorage.setItem(CART_ID_KEY, newCart.id);
       setCart(newCart);
       setCartError(null);
@@ -111,7 +120,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setCartError(msg);
       return null;
     }
-  }, []);
+  }, [locale]);
 
   useEffect(() => {
     const stored = typeof window !== "undefined" ? localStorage.getItem(CART_ID_KEY) : null;
@@ -156,7 +165,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         return;
       }
       try {
-        const c = await addToCart(cartId, variantId, quantity);
+        const c = await addToCart(cartId, variantId, quantity, locale);
         setCart(c);
         setOptimisticLines((prev) => prev.filter((l) => l.variantId !== variantId));
       } catch (e) {
@@ -166,10 +175,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         if (isInvalidCart && typeof window !== "undefined") {
           localStorage.removeItem(CART_ID_KEY);
           try {
-            const newCart = await createCart();
+            const newCart = await createCart(locale);
             localStorage.setItem(CART_ID_KEY, newCart.id);
             cartId = newCart.id;
-            const retry = await addToCart(cartId, variantId, quantity);
+            const retry = await addToCart(cartId, variantId, quantity, locale);
             setCart(retry);
             setOptimisticLines((prev) => prev.filter((l) => l.variantId !== variantId));
           } catch (retryErr) {
@@ -184,7 +193,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setIsPendingAdd(false);
       }
     },
-    [ensureCartId]
+    [ensureCartId, locale]
   );
 
   const flushDebouncedUpdate = useCallback(
@@ -219,7 +228,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         });
         setPendingLineIds((prev) => new Set(prev).add(lineId));
         try {
-          const c = await removeCartLine(cart.id, lineId);
+          const c = await removeCartLine(cart.id, lineId, locale);
           setCart(c);
           setPendingQuantities((prev) => {
             const next = { ...prev };
@@ -272,7 +281,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         setPendingLineIds((prev) => new Set(prev).add(lineId));
         (async () => {
           try {
-            const c = await updateCartLine(cart.id, lineId, quantity);
+            const c = await updateCartLine(cart.id, lineId, quantity, locale);
             setCart(c);
             setPendingQuantities((prev) => {
               const next = { ...prev };
@@ -307,7 +316,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         })();
         }, DEBOUNCE_MS);
     },
-    [cart?.id, flushDebouncedUpdate, pendingQuantities]
+    [cart?.id, flushDebouncedUpdate, pendingQuantities, locale]
   );
 
   const removeLine = useCallback(
@@ -327,7 +336,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       setPendingLineIds((prev) => new Set(prev).add(lineId));
       flushDebouncedUpdate(lineId);
       try {
-        const c = await removeCartLine(cart.id, lineId);
+        const c = await removeCartLine(cart.id, lineId, locale);
         setCart(c);
       } catch (e) {
         setCart((prev) =>
@@ -342,7 +351,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         });
       }
     },
-    [cart?.id, flushDebouncedUpdate]
+    [cart?.id, flushDebouncedUpdate, locale]
   );
 
   const value = useMemo<CartContextValue>(
