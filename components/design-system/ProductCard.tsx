@@ -16,10 +16,19 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, locale = "en" }: ProductCardProps) {
-  const priceFormatted = new Intl.NumberFormat(locale, {
-    style: "currency",
-    currency: product.currencyCode,
-  }).format(parseFloat(product.price));
+  const normalizedLocale =
+    typeof locale === "string" && locale.trim().length > 0 ? locale : "en";
+  const formatCurrency = (targetLocale: string) =>
+    new Intl.NumberFormat(targetLocale, {
+      style: "currency",
+      currency: product.currencyCode,
+    }).format(parseFloat(product.price));
+  let priceFormatted = "";
+  try {
+    priceFormatted = formatCurrency(normalizedLocale);
+  } catch {
+    priceFormatted = formatCurrency("en");
+  }
 
   return (
     <Link

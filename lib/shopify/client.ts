@@ -173,11 +173,20 @@ export async function shopifyFetch<T>({
   return json.data as T;
 }
 
-/** Map app locale (lowercase) to Shopify LanguageCode (uppercase). Defaults to EN. */
+/** Map app locale to Shopify LanguageCode. Defaults to EN. */
 function toShopifyLanguage(locale?: string): string {
   if (!locale || typeof locale !== "string") return "EN";
-  const code = locale.trim().toUpperCase().slice(0, 2);
-  return code || "EN";
+  const normalized = locale.trim().toLowerCase().split("-")[0];
+  const map: Record<string, string> = {
+    en: "EN",
+    cs: "CS",
+    de: "DE",
+    fr: "FR",
+    es: "ES",
+    it: "IT",
+    pl: "PL",
+  };
+  return map[normalized] ?? "EN";
 }
 
 export interface ShopifyLanguage {
