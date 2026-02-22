@@ -61,20 +61,18 @@
     "remove": "Remove"
   },
   "footer": {
-    "tagline": "Handcrafted candles & notebooks made with love",
     "shop": "Shop",
+    "home": "Home",
     "allCollections": "All Collections",
     "about": "About",
     "ourStory": "Our Story",
     "faq": "FAQ",
     "contact": "Contact",
     "customerCare": "Customer Care",
-    "shippingInfo": "Shipping Info",
     "returns": "Returns",
-    "careInstructions": "Care Instructions",
-    "madeWith": "Made with",
-    "byPookie": "by PookieCrafts © 2026",
+    "copyright": "All rights reserved.",
     "instagram": "Instagram",
+    "facebook": "Facebook",
     "email": "Email"
   },
   "about": {
@@ -131,7 +129,10 @@
     "emailPlaceholder": "your@email.com",
     "subjectPlaceholder": "What's this about?",
     "messagePlaceholder": "Tell us more...",
-    "sendButton": "Send Message"
+    "sendButton": "Send Message",
+    "sending": "Sending…",
+    "sendError": "Message not sent",
+    "sendErrorText": "Please try again in a moment."
   },
   "collections": {
     "title": "Collections",
@@ -145,6 +146,14 @@
   "metadata": {
     "title": "PookieCrafts | Handmade Candles & Notebooks",
     "description": "Handcrafted candles and notebooks made with love"
+  },
+  "returnsPage": {
+    "title": "Returns & refunds",
+    "subtitle": "A simple and fair process for your peace of mind.",
+    "p1": "If you're not satisfied with your order, you can return it within 14 days of delivery. The product must be unused and in its original condition.",
+    "p2": "For claims, please contact us as soon as possible and include your order number with a short description of the issue.",
+    "p3": "After approval, we'll send return instructions. Shipping costs depend on the claim type and local regulations.",
+    "contact": "Contact us at"
   },
   "notFound": {
     "title": "Page Not Found",

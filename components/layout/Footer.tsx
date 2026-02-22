@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import NextImage from "next/image";
-import { Heart, Instagram, Mail } from "lucide-react";
+import { Facebook, Instagram, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export function Footer() {
@@ -20,21 +20,31 @@ export function Footer() {
                 height={100}
               />
             </Link>
-            <p className="text-muted-foreground text-sm">{t("tagline")}</p>
             <div className="flex gap-3">
               <a
-                href="#"
+                href="https://instagram.com/pookie.crafts.store"
                 className="w-10 h-10 bg-muted hover:bg-accent transition-colors rounded-full flex items-center justify-center"
                 aria-label={t("instagram")}
+                target="_blank"
+                rel="noopener noreferrer"
               >
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="#"
+                href="mailto:pookie.crafts909@gmail.com"
                 className="w-10 h-10 bg-muted hover:bg-accent transition-colors rounded-full flex items-center justify-center"
                 aria-label={t("email")}
               >
                 <Mail className="w-5 h-5" />
+              </a>
+              <a
+                href="https://www.facebook.com/pookie.crafts.store"
+                className="w-10 h-10 bg-muted hover:bg-accent transition-colors rounded-full flex items-center justify-center"
+                aria-label={t("facebook")}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <Facebook className="w-5 h-5" />
               </a>
             </div>
           </div>
@@ -42,6 +52,14 @@ export function Footer() {
           <div>
             <h4 className="font-semibold mb-4">{t("shop")}</h4>
             <ul className="space-y-2 text-sm">
+              <li>
+                <Link
+                  href="/"
+                  className="text-muted-foreground hover:text-accent transition-colors"
+                >
+                  {t("home")}
+                </Link>
+              </li>
               <li>
                 <Link
                   href="/collections"
@@ -87,37 +105,19 @@ export function Footer() {
             <h4 className="font-semibold mb-4">{t("customerCare")}</h4>
             <ul className="space-y-2 text-sm">
               <li>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-accent transition-colors"
-                >
-                  {t("shippingInfo")}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
+                <Link
+                  href="/returns"
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
                   {t("returns")}
-                </a>
-              </li>
-              <li>
-                <a
-                  href="#"
-                  className="text-muted-foreground hover:text-accent transition-colors"
-                >
-                  {t("careInstructions")}
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
         </div>
 
         <div className="pt-8 border-t border-border text-center text-sm text-muted-foreground">
-          <p>
-            {t("madeWith")} <Heart className="w-4 h-4 inline text-accent" /> {t("byPookie")}
-          </p>
+          <p>{t("copyright")}</p>
         </div>
       </div>
     </footer>

@@ -61,20 +61,18 @@
     "remove": "Eliminar"
   },
   "footer": {
-    "tagline": "Velas y cuadernos artesanales hechos con amor",
     "shop": "Tienda",
+    "home": "Inicio",
     "allCollections": "Todas las colecciones",
     "about": "Sobre nosotros",
     "ourStory": "Nuestra historia",
     "faq": "FAQ",
     "contact": "Contacto",
     "customerCare": "Atención al cliente",
-    "shippingInfo": "Info envío",
     "returns": "Devoluciones",
-    "careInstructions": "Instrucciones de cuidado",
-    "madeWith": "Hecho con",
-    "byPookie": "por PookieCrafts © 2026",
+    "copyright": "Todos los derechos reservados.",
     "instagram": "Instagram",
+    "facebook": "Facebook",
     "email": "Email"
   },
   "about": {
@@ -131,7 +129,10 @@
     "emailPlaceholder": "tu@email.com",
     "subjectPlaceholder": "¿De qué se trata?",
     "messagePlaceholder": "Cuéntanos más...",
-    "sendButton": "Enviar mensaje"
+    "sendButton": "Enviar mensaje",
+    "sending": "Enviando…",
+    "sendError": "Mensaje no enviado",
+    "sendErrorText": "Inténtalo de nuevo en un momento."
   },
   "collections": {
     "title": "Colecciones",
@@ -145,6 +146,14 @@
   "metadata": {
     "title": "PookieCrafts | Velas y cuadernos artesanales",
     "description": "Velas y cuadernos artesanales hechos con amor"
+  },
+  "returnsPage": {
+    "title": "Devoluciones y reembolsos",
+    "subtitle": "Un proceso simple y justo para tu tranquilidad.",
+    "p1": "Si no estás satisfecho con tu pedido, puedes devolverlo dentro de los 14 días posteriores a la entrega. El producto debe estar sin usar y en su estado original.",
+    "p2": "Para reclamaciones, contáctanos lo antes posible e incluye tu número de pedido y una breve descripción del problema.",
+    "p3": "Tras la aprobación, te enviaremos las instrucciones de devolución. Los costos de envío dependen del tipo de reclamación y de la normativa local.",
+    "contact": "Contáctanos en"
   },
   "notFound": {
     "title": "Página no encontrada",

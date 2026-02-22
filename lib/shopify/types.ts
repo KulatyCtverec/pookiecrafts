@@ -53,10 +53,22 @@ export interface ShopifyProduct {
   description: string;
   updatedAt?: string;
   seo?: ShopifySeo | null;
+  availableForSale?: boolean;
   featuredImage: ShopifyImage | null;
   images: { nodes: ShopifyImage[] };
   options?: ShopifyProductOption[];
   variants: { nodes: ShopifyProductVariant[] };
+  priceRange: {
+    minVariantPrice: ShopifyMoney;
+  };
+}
+
+export interface ShopifyProductSummary {
+  id: string;
+  handle: string;
+  title: string;
+  availableForSale: boolean;
+  featuredImage: ShopifyImage | null;
   priceRange: {
     minVariantPrice: ShopifyMoney;
   };

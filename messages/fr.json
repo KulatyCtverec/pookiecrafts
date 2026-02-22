@@ -61,20 +61,18 @@
     "remove": "Supprimer"
   },
   "footer": {
-    "tagline": "Bougies et carnets artisanaux faits avec amour",
     "shop": "Boutique",
+    "home": "Accueil",
     "allCollections": "Toutes les collections",
     "about": "À propos",
     "ourStory": "Notre histoire",
     "faq": "FAQ",
     "contact": "Contact",
     "customerCare": "Service client",
-    "shippingInfo": "Infos livraison",
     "returns": "Retours",
-    "careInstructions": "Instructions d'entretien",
-    "madeWith": "Fait avec",
-    "byPookie": "par PookieCrafts © 2026",
+    "copyright": "Tous droits réservés.",
     "instagram": "Instagram",
+    "facebook": "Facebook",
     "email": "E-mail"
   },
   "about": {
@@ -131,7 +129,10 @@
     "emailPlaceholder": "votre@email.fr",
     "subjectPlaceholder": "De quoi s'agit-il ?",
     "messagePlaceholder": "Dites-nous en plus...",
-    "sendButton": "Envoyer le message"
+    "sendButton": "Envoyer le message",
+    "sending": "Envoi en cours…",
+    "sendError": "Message non envoyé",
+    "sendErrorText": "Veuillez réessayer dans un instant."
   },
   "collections": {
     "title": "Collections",
@@ -145,6 +146,14 @@
   "metadata": {
     "title": "PookieCrafts | Bougies & Carnets artisanaux",
     "description": "Bougies et carnets artisanaux faits avec amour"
+  },
+  "returnsPage": {
+    "title": "Retours et remboursements",
+    "subtitle": "Un processus simple et équitable pour votre tranquillité.",
+    "p1": "Si vous n'êtes pas satisfait de votre commande, vous pouvez la retourner dans les 14 jours suivant la livraison. Le produit doit être inutilisé et dans son état d'origine.",
+    "p2": "En cas de réclamation, contactez-nous dès que possible avec votre numéro de commande et une brève description du problème.",
+    "p3": "Après validation, nous vous enverrons les instructions de retour. Les frais d'expédition dépendent du type de réclamation et des réglementations locales.",
+    "contact": "Contactez-nous à"
   },
   "notFound": {
     "title": "Page non trouvée",

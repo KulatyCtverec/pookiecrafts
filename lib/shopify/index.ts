@@ -8,6 +8,7 @@ export {
   getCollectionHandles,
   getProductHandles,
 } from "./client";
+export { getProductsByTypeSummary } from "./client";
 export type { ShopifyProductForColor } from "./client";
 export {
   createCart,

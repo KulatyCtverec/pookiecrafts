@@ -19,7 +19,7 @@
     "selectLanguage": "Vybrat jazyk"
   },
   "home": {
-    "heroTitle": "Pohodová atmosféra, ručně vyrobeno s láskou",
+    "heroTitle": "Navrženo s láskou k tvoření. Kolekce svíček a zápisníků inspirovaná radostí z tvoření a citem pro detail.",
     "heroSubtitle": "Objevte naši kolekci ručně vyrobených svíček a zápisníků, vytvořených pro přinesení tepla a radosti do vašich všedních chvil.",
     "shopNow": "Nakupovat",
     "ourStory": "Náš příběh",
@@ -61,38 +61,27 @@
     "remove": "Odebrat"
   },
   "footer": {
-    "tagline": "Ručně vyrobené svíčky a zápisníky s láskou",
     "shop": "Obchod",
+    "home": "Domů",
     "allCollections": "Všechny kolekce",
     "about": "O nás",
     "ourStory": "Náš příběh",
     "faq": "FAQ",
     "contact": "Kontakt",
     "customerCare": "Zákaznická podpora",
-    "shippingInfo": "Informace o dopravě",
     "returns": "Reklamace a vrácení",
-    "careInstructions": "Návod na péči",
-    "madeWith": "Vyrobeno s",
-    "byPookie": "PookieCrafts © 2026",
+    "copyright": "Všechna práva vyhrazena.",
     "instagram": "Instagram",
+    "facebook": "Facebook",
     "email": "Email"
   },
   "about": {
     "title": "O PookieCrafts",
-    "subtitle": "Ručně vyrobeno s láskou, navrženo pro přinesení tepla a radosti do vašich všedních chvil.",
+    "subtitle": "Ručně vyrobeno s láskou, aby vaše každodenní chvíle byly o něco teplejší a radostnější.",
     "workspaceAlt": "Dílna PookieCrafts",
     "howItStarted": "Jak to všechno začalo",
-    "howItStartedText1": "PookieCrafts vzniklo z jednoduché lásky k vytváření krásných, smysluplných věcí vlastníma rukama. Co začalo jako koníček v malém domácím studiu, vyrostlo v vášeň pro výrobu produktů, které přinášejí pohodu a radost do života.",
-    "howItStartedText2": "Každá svíčka je lita s péčí, jen z přírodního sojového vosku a prémiových vonných olejů. Každý zápisník je pečlivě vázán s pozorností ke každému detailu. Věříme, že ručně vyrobené výrobky nesou zvláštní teplo, kterému hromadná výroba nemůže konkurovat.",
-    "ourValues": "Naše hodnoty",
-    "handmadeQuality": "Ruční kvalita",
-    "handmadeQualityText": "Každý výrobek je ručně vyroben v malých sériích pro zajištění nejvyšší kvality.",
-    "naturalMaterials": "Přírodní materiály",
-    "naturalMaterialsText": "Používáme ekologické, udržitelné materiály, kdykoli je to možné.",
-    "madeWithLove": "Vyrobeno s láskou",
-    "madeWithLoveText": "Každý kus je vytvořen s péčí a pozorností ke detailu.",
-    "thoughtfulDesign": "Promyšlený design",
-    "thoughtfulDesignText": "Krásná estetika se potkává s praktickou funkčností.",
+    "howItStartedText1": "PookieCrafts se zrodilo z radosti z craftění, tvoření a lásky k estetickým detailům. To, co začalo jako kreativní únik a koníček, se proměnilo v značku zaměřenou na navrhování produktů, které vnášejí klid, teplo a krásu do každodenního života.",
+    "howItStartedText2": "Každý kousek je navržen s citem pro materiály, vůně a vizuální harmonii. Svíčky jsou tvořeny z přírodního sojového vosku s prémiovými vůněmi, zápisníky vznikají s důrazem na praktičnost i design.",
     "joinCommunity": "Přidejte se k naší komunitě",
     "joinCommunityText": "Jsme vděčni za naši skvělou komunitu zákazníků, kteří oceňují ruční kvalitu a promyšlený design. Každá objednávka podporuje malý podnik a pomáhá nám dělat to, co milujeme. Děkujeme, že jste součástí naší cesty!"
   },
@@ -104,9 +93,9 @@
     "q2": "Z čeho jsou svíčky vyrobeny?",
     "a2": "Všechny naše svíčky jsou ručně lity ze 100% přírodního sojového vosku, prémiových vonných olejů a bavlněných knotů. Používáme ekologické, udržitelné ingredience, které jsou veganské a cruelty-free.",
     "q3": "Jaký papír používáte pro zápisníky?",
-    "a3": "Naše zápisníky mají vysoce kvalitní bezdřevý papír (120 g/m²), který zabraňuje propíjení a žloutnutí. Každý zápisník obsahuje 120 stran hladkého psacího papíru.",
+    "a3": "Naše zápisníky mají vysoce kvalitní bezdřevý papír (120 g/m²), který zabraňuje propíjení a žloutnutí. Každý zápisník obsahuje 200 stran hladkého psacího papíru.",
     "q4": "Nabízíte mezinárodní dopravu?",
-    "a4": "V současnosti dopravujeme pouze do USA. Doprava zdarma u objednávek nad 50 €. Většina objednávek je expedována do 1–2 pracovních dnů a dorazí do 3–5 pracovních dnů.",
+    "a4": "Ano, doručujeme v rámci EU. Doprava zdarma u objednávek nad 50 €. Většina objednávek je expedována do 1–2 pracovních dnů.",
     "stillQuestions": "Máte další otázky?",
     "stillQuestionsText": "Jsme tu pro vás! Neváhejte nás kontaktovat.",
     "contactUs": "Kontaktujte nás"
@@ -131,7 +120,10 @@
     "emailPlaceholder": "vas@email.cz",
     "subjectPlaceholder": "O co jde?",
     "messagePlaceholder": "Řekněte nám víc...",
-    "sendButton": "Odeslat zprávu"
+    "sendButton": "Odeslat zprávu",
+    "sending": "Odesílám…",
+    "sendError": "Zprávu se nepodařilo odeslat",
+    "sendErrorText": "Zkuste to prosím znovu za chvíli."
   },
   "collections": {
     "title": "Kolekce",
@@ -145,6 +137,14 @@
   "metadata": {
     "title": "PookieCrafts | Ručně vyrobené svíčky a zápisníky",
     "description": "Ručně vyrobené svíčky a zápisníky s láskou"
+  },
+  "returnsPage": {
+    "title": "Reklamace a vrácení",
+    "subtitle": "Jednoduchý a férový proces pro vaši spokojenost.",
+    "p1": "Pokud nejste s objednávkou spokojeni, můžete ji vrátit do 14 dnů od převzetí. Produkt musí být nepoužitý a v původním stavu.",
+    "p2": "V případě reklamace nás prosím kontaktujte co nejdříve. Přiložte číslo objednávky a stručný popis problému.",
+    "p3": "Po schválení vám zašleme instrukce k odeslání balíčku. Náklady na dopravu se řídí platnou legislativou a povahou reklamace.",
+    "contact": "Kontaktujte nás na"
   },
   "notFound": {
     "title": "Stránka nenalezena",

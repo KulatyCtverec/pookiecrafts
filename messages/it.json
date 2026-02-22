@@ -61,20 +61,18 @@
     "remove": "Rimuovi"
   },
   "footer": {
-    "tagline": "Candele e taccuini artigianali fatti con amore",
     "shop": "Negozio",
+    "home": "Home",
     "allCollections": "Tutte le collezioni",
     "about": "Chi siamo",
     "ourStory": "La nostra storia",
     "faq": "FAQ",
     "contact": "Contatti",
     "customerCare": "Assistenza clienti",
-    "shippingInfo": "Info spedizione",
     "returns": "Resi",
-    "careInstructions": "Istruzioni di cura",
-    "madeWith": "Fatto con",
-    "byPookie": "da PookieCrafts © 2026",
+    "copyright": "Tutti i diritti riservati.",
     "instagram": "Instagram",
+    "facebook": "Facebook",
     "email": "Email"
   },
   "about": {
@@ -131,7 +129,10 @@
     "emailPlaceholder": "tua@email.it",
     "subjectPlaceholder": "Di cosa si tratta?",
     "messagePlaceholder": "Raccontaci di più...",
-    "sendButton": "Invia messaggio"
+    "sendButton": "Invia messaggio",
+    "sending": "Invio in corso…",
+    "sendError": "Messaggio non inviato",
+    "sendErrorText": "Riprova tra un momento."
   },
   "collections": {
     "title": "Collezioni",
@@ -145,6 +146,14 @@
   "metadata": {
     "title": "PookieCrafts | Candele e taccuini artigianali",
     "description": "Candele e taccuini artigianali fatti con amore"
+  },
+  "returnsPage": {
+    "title": "Resi e rimborsi",
+    "subtitle": "Un processo semplice e corretto per la tua tranquillità.",
+    "p1": "Se non sei soddisfatto del tuo ordine, puoi restituirlo entro 14 giorni dalla consegna. Il prodotto deve essere inutilizzato e in condizioni originali.",
+    "p2": "Per reclami, contattaci il prima possibile includendo il numero d'ordine e una breve descrizione del problema.",
+    "p3": "Dopo l'approvazione, ti invieremo le istruzioni per il reso. I costi di spedizione dipendono dal tipo di reclamo e dalle normative locali.",
+    "contact": "Contattaci a"
   },
   "notFound": {
     "title": "Pagina non trovata",

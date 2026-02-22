@@ -61,20 +61,18 @@
     "remove": "Usuń"
   },
   "footer": {
-    "tagline": "Ręcznie robione świece i notatniki z miłością",
     "shop": "Sklep",
+    "home": "Strona główna",
     "allCollections": "Wszystkie kolekcje",
     "about": "O nas",
     "ourStory": "Nasza historia",
     "faq": "FAQ",
     "contact": "Kontakt",
     "customerCare": "Obsługa klienta",
-    "shippingInfo": "Informacje o dostawie",
     "returns": "Zwroty",
-    "careInstructions": "Instrukcje pielęgnacji",
-    "madeWith": "Zrobione z",
-    "byPookie": "przez PookieCrafts © 2026",
+    "copyright": "Wszelkie prawa zastrzeżone.",
     "instagram": "Instagram",
+    "facebook": "Facebook",
     "email": "Email"
   },
   "about": {
@@ -131,7 +129,10 @@
     "emailPlaceholder": "twoj@email.pl",
     "subjectPlaceholder": "O co chodzi?",
     "messagePlaceholder": "Opowiedz nam więcej...",
-    "sendButton": "Wyślij wiadomość"
+    "sendButton": "Wyślij wiadomość",
+    "sending": "Wysyłanie…",
+    "sendError": "Wiadomość nie została wysłana",
+    "sendErrorText": "Spróbuj ponownie za chwilę."
   },
   "collections": {
     "title": "Kolekcje",
@@ -145,6 +146,14 @@
   "metadata": {
     "title": "PookieCrafts | Ręcznie robione świece i notatniki",
     "description": "Ręcznie robione świece i notatniki z miłością"
+  },
+  "returnsPage": {
+    "title": "Zwroty i reklamacje",
+    "subtitle": "Prosty i uczciwy proces dla Twojego spokoju.",
+    "p1": "Jeśli nie jesteś zadowolony z zamówienia, możesz je zwrócić w ciągu 14 dni od dostawy. Produkt musi być nieużywany i w oryginalnym stanie.",
+    "p2": "W przypadku reklamacji skontaktuj się z nami jak najszybciej i podaj numer zamówienia oraz krótki opis problemu.",
+    "p3": "Po zatwierdzeniu prześlemy instrukcje zwrotu. Koszty wysyłki zależą od rodzaju reklamacji i lokalnych przepisów.",
+    "contact": "Skontaktuj się z nami:"
   },
   "notFound": {
     "title": "Strona nie znaleziona",

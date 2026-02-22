@@ -97,6 +97,31 @@ export const PRODUCTS_BY_TYPE_QUERY = `
   }
 `;
 
+export const PRODUCTS_BY_TYPE_SUMMARY_QUERY = `
+  query getProductsByTypeSummary($query: String!, $language: LanguageCode) @inContext(language: $language) {
+    products(first: 50, query: $query) {
+      nodes {
+        id
+        handle
+        title
+        availableForSale
+        featuredImage {
+          url
+          altText
+          width
+          height
+        }
+        priceRange {
+          minVariantPrice {
+            amount
+            currencyCode
+          }
+        }
+      }
+    }
+  }
+`;
+
 export const PRODUCT_BY_HANDLE_QUERY = `
   query getProductByHandle($handle: String!, $language: LanguageCode) @inContext(language: $language) {
     product(handle: $handle) {

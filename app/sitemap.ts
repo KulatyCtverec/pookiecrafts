@@ -27,7 +27,7 @@ function buildLocalizedEntries(
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const staticPaths = ["/", "/about", "/faq", "/contact"];
+  const staticPaths = ["/", "/about", "/faq", "/contact", "/returns"];
   const staticEntries = staticPaths.flatMap((path) =>
     buildLocalizedEntries(path === "/" ? "" : path)
   );

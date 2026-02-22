@@ -19,6 +19,9 @@ export const metadata: Metadata = {
   title: "PookieCrafts | Handmade Candles & Notebooks",
   description: "Handcrafted candles and notebooks made with love",
   metadataBase: new URL(getBaseUrl()),
+  icons: {
+    icon: "/maslicka.png",
+  },
   openGraph: {
     title: "PookieCrafts | Handmade Candles & Notebooks",
     description: "Handcrafted candles and notebooks made with love",

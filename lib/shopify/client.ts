@@ -5,6 +5,7 @@ import {
   LOCALIZATION_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
   PRODUCTS_BY_TYPE_QUERY,
+  PRODUCTS_BY_TYPE_SUMMARY_QUERY,
   COLLECTIONS_PAGINATED_QUERY,
   PRODUCTS_PAGINATED_QUERY,
 } from "./queries";
@@ -12,6 +13,7 @@ import type {
   ShopifyCollection,
   ShopifyCollectionWithProducts,
   ShopifyProduct,
+  ShopifyProductSummary,
 } from "./types";
 
 // ——— Jediné místo konfigurace Storefront API ——
@@ -272,6 +274,23 @@ export async function getProductsByType(
     products: { nodes: ShopifyProductForColor[] };
   }>({
     query: PRODUCTS_BY_TYPE_QUERY,
+    variables: { query, language },
+    revalidate: 300,
+  });
+  return data.products?.nodes ?? [];
+}
+
+export async function getProductsByTypeSummary(
+  productType: string,
+  locale?: string
+): Promise<ShopifyProductSummary[]> {
+  if (!isConfigured() || !productType.trim()) return [];
+  const query = `product_type:"${productType.replace(/"/g, '\\"')}"`;
+  const language = toShopifyLanguage(locale);
+  const data = await shopifyFetch<{
+    products: { nodes: ShopifyProductSummary[] };
+  }>({
+    query: PRODUCTS_BY_TYPE_SUMMARY_QUERY,
     variables: { query, language },
     revalidate: 300,
   });

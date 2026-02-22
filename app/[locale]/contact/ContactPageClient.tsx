@@ -13,21 +13,66 @@ export function ContactPageClient() {
     email: "",
     subject: "",
     message: "",
+    website: "",
   });
-  const [submitted, setSubmitted] = useState(false);
+  const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">(
+    "idle"
+  );
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [startedAt, setStartedAt] = useState<number | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setFormData({ name: "", email: "", subject: "", message: "" });
-    }, 3000);
+    if (status === "sending") return;
+
+    setStatus("sending");
+    setErrorMessage(null);
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
+          website: formData.website,
+          startedAt,
+        }),
+      });
+
+      const data = await response.json().catch(() => null);
+
+      if (!response.ok || !data?.ok) {
+        setStatus("error");
+        setErrorMessage(t("sendErrorText"));
+        return;
+      }
+
+      setStatus("success");
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+        website: "",
+      });
+      setStartedAt(null);
+
+      setTimeout(() => {
+        setStatus("idle");
+      }, 3000);
+    } catch {
+      setStatus("error");
+      setErrorMessage(t("sendErrorText"));
+    }
   };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
+    if (!startedAt) setStartedAt(Date.now());
     setFormData((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
@@ -97,7 +142,7 @@ export function ContactPageClient() {
 
         <div className="bg-card rounded-3xl p-8 border border-border">
           <h2 className="text-2xl mb-6">{t("sendMessage")}</h2>
-          {submitted ? (
+          {status === "success" ? (
             <div className="bg-secondary rounded-2xl p-8 text-center space-y-4">
               <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center mx-auto">
                 <Mail className="w-8 h-8 text-white" />
@@ -107,6 +152,12 @@ export function ContactPageClient() {
             </div>
           ) : (
             <form onSubmit={handleSubmit} className="space-y-5">
+              {status === "error" && (
+                <div className="bg-secondary rounded-2xl p-4 text-sm">
+                  <p className="font-semibold">{t("sendError")}</p>
+                  <p className="text-muted-foreground">{errorMessage}</p>
+                </div>
+              )}
               <div>
                 <label htmlFor="name" className="block mb-2">
                   {t("name")}
@@ -163,8 +214,25 @@ export function ContactPageClient() {
                   rows={6}
                 />
               </div>
-              <Button type="submit" size="lg" className="w-full">
-                {t("sendButton")}
+              <div className="hidden" aria-hidden="true">
+                <label htmlFor="website">Website</label>
+                <Input
+                  id="website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                  value={formData.website}
+                  onChange={handleChange}
+                />
+              </div>
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full"
+                disabled={status === "sending"}
+              >
+                {status === "sending" ? t("sending") : t("sendButton")}
               </Button>
             </form>
           )}

@@ -1,4 +1,4 @@
-import { Heart } from "lucide-react";
+import { Heart, Instagram } from "lucide-react";
 import NextImage from "next/image";
 import { getTranslations } from "next-intl/server";
 import type { Metadata } from "next";
@@ -77,33 +77,21 @@ export default async function AboutPage() {
           </p>
         </div>
 
-        <div className="bg-linear-to-br from-[#FFE6ED] to-[#FFF4E6] rounded-3xl p-8">
-          <h2 className="text-2xl mb-4">{t("ourValues")}</h2>
-          <div className="grid sm:grid-cols-2 gap-6">
-            <div>
-              <h3 className="text-lg font-semibold mb-2">{t("handmadeQuality")}</h3>
-              <p className="text-muted-foreground">{t("handmadeQualityText")}</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">{t("naturalMaterials")}</h3>
-              <p className="text-muted-foreground">{t("naturalMaterialsText")}</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">{t("madeWithLove")}</h3>
-              <p className="text-muted-foreground">{t("madeWithLoveText")}</p>
-            </div>
-            <div>
-              <h3 className="text-lg font-semibold mb-2">{t("thoughtfulDesign")}</h3>
-              <p className="text-muted-foreground">{t("thoughtfulDesignText")}</p>
-            </div>
-          </div>
-        </div>
-
         <div className="bg-card rounded-3xl p-8 border border-border text-center">
           <h2 className="text-2xl mb-4">{t("joinCommunity")}</h2>
           <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto">
             {t("joinCommunityText")}
           </p>
+          <a
+            href="https://instagram.com/pookie.crafts.store"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors"
+            aria-label="Instagram"
+          >
+            <Instagram className="w-5 h-5" />
+            @pookie.crafts.store
+          </a>
         </div>
       </div>
     </div>

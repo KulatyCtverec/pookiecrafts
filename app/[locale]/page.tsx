@@ -4,7 +4,7 @@ import { Button } from "@/components/design-system/Button";
 import { ProductCard } from "@/components/design-system/ProductCard";
 import { HeroCarousel } from "@/components/design-system/HeroCarousel";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
-import { getCollections, getCollectionByHandle } from "@/lib/shopify";
+import { getCollections, getCollectionByHandle, getProductsByTypeSummary } from "@/lib/shopify";
 import { Star, Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { locales } from "@/lib/i18n/config";
@@ -54,12 +54,54 @@ export default async function HomePage({
   const { locale } = await params;
   const t = await getTranslations("home");
   const collections = await getCollections(locale);
-  const collectionDetailsFirst4 = await Promise.all(
-    collections.slice(0, 4).map((c) => getCollectionByHandle(c.handle, locale))
+  const collectionDetailsFirst3 = await Promise.all(
+    collections.slice(0, 3).map((c) => getCollectionByHandle(c.handle, locale))
   );
 
-  const bestsellerProducts =
-    collectionDetailsFirst4.flatMap((col) => {
+  const candles = await getProductsByTypeSummary("Candle", locale);
+  const journals = await getProductsByTypeSummary("Journal", locale);
+
+  const candlesAvailable = candles.filter((p) => p.availableForSale);
+  const journalsAvailable = journals.filter((p) => p.availableForSale);
+
+  const bestsellersFromTypes: {
+    id: string;
+    handle: string;
+    title: string;
+    image: string | null;
+    price: string;
+    currencyCode: string;
+  }[] = [];
+  const maxItems = 4;
+  for (let i = 0; bestsellersFromTypes.length < maxItems; i += 1) {
+    const candle = candlesAvailable[i];
+    const journal = journalsAvailable[i];
+    if (candle) {
+      bestsellersFromTypes.push({
+        id: candle.id,
+        handle: candle.handle,
+        title: candle.title,
+        image: candle.featuredImage?.url ?? null,
+        price: candle.priceRange.minVariantPrice.amount,
+        currencyCode: candle.priceRange.minVariantPrice.currencyCode,
+      });
+    }
+    if (bestsellersFromTypes.length >= maxItems) break;
+    if (journal) {
+      bestsellersFromTypes.push({
+        id: journal.id,
+        handle: journal.handle,
+        title: journal.title,
+        image: journal.featuredImage?.url ?? null,
+        price: journal.priceRange.minVariantPrice.amount,
+        currencyCode: journal.priceRange.minVariantPrice.currencyCode,
+      });
+    }
+    if (!candle && !journal) break;
+  }
+
+  const fallbackBestsellers =
+    collectionDetailsFirst3.flatMap((col) => {
       const first = col?.products.nodes[0];
       if (!first) return [];
       return [
@@ -74,6 +116,10 @@ export default async function HomePage({
       ];
     }) ?? [];
 
+  const bestsellerProducts = bestsellersFromTypes.length
+    ? bestsellersFromTypes
+    : fallbackBestsellers;
+
   const carouselImagesRaw = bestsellerProducts
     .map((p) => (p.image ? { url: p.image, alt: p.title } : null))
     .filter(Boolean) as { url: string; alt: string }[];
@@ -87,7 +133,7 @@ export default async function HomePage({
           },
         ];
 
-  const browseCards = collections.map((c) => ({
+  const browseCards = collections.slice(0, 3).map((c) => ({
     id: c.id,
     title: c.title,
     handle: c.handle,
@@ -152,7 +198,7 @@ export default async function HomePage({
           <div className="text-center mb-8">
             <h2 className="text-3xl mb-2">{t("browseCollections")}</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {browseCards.map((card) => (
               <Link
                 key={card.id}

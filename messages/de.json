@@ -61,20 +61,18 @@
     "remove": "Entfernen"
   },
   "footer": {
-    "tagline": "Handgefertigte Kerzen & Notizbücher mit Liebe gemacht",
     "shop": "Shop",
+    "home": "Startseite",
     "allCollections": "Alle Kollektionen",
     "about": "Über uns",
     "ourStory": "Unsere Geschichte",
     "faq": "FAQ",
     "contact": "Kontakt",
     "customerCare": "Kundenservice",
-    "shippingInfo": "Versandinfo",
     "returns": "Rückgabe",
-    "careInstructions": "Pflegehinweise",
-    "madeWith": "Mit",
-    "byPookie": "von PookieCrafts erstellt © 2026",
+    "copyright": "Alle Rechte vorbehalten.",
     "instagram": "Instagram",
+    "facebook": "Facebook",
     "email": "E-Mail"
   },
   "about": {
@@ -131,7 +129,10 @@
     "emailPlaceholder": "ihre@email.de",
     "subjectPlaceholder": "Worum geht es?",
     "messagePlaceholder": "Erzählen Sie uns mehr...",
-    "sendButton": "Nachricht senden"
+    "sendButton": "Nachricht senden",
+    "sending": "Wird gesendet…",
+    "sendError": "Nachricht nicht gesendet",
+    "sendErrorText": "Bitte versuchen Sie es in einem Moment erneut."
   },
   "collections": {
     "title": "Kollektionen",
@@ -145,6 +146,14 @@
   "metadata": {
     "title": "PookieCrafts | Handgefertigte Kerzen & Notizbücher",
     "description": "Handgefertigte Kerzen und Notizbücher mit Liebe gemacht"
+  },
+  "returnsPage": {
+    "title": "Rückgabe & Reklamation",
+    "subtitle": "Ein einfacher und fairer Prozess für deine Zufriedenheit.",
+    "p1": "Wenn du mit deiner Bestellung nicht zufrieden bist, kannst du sie innerhalb von 14 Tagen nach Lieferung zurückgeben. Das Produkt muss unbenutzt und im Originalzustand sein.",
+    "p2": "Bei Reklamationen kontaktiere uns bitte so schnell wie möglich und gib deine Bestellnummer sowie eine kurze Beschreibung des Problems an.",
+    "p3": "Nach der Freigabe senden wir dir die Rücksendeanweisungen. Die Versandkosten richten sich nach Art der Reklamation und den lokalen Vorschriften.",
+    "contact": "Kontakt: "
   },
   "notFound": {
     "title": "Seite nicht gefunden",
