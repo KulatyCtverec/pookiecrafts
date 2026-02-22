@@ -10,11 +10,19 @@ export interface ShopifyMoney {
   currencyCode: string;
 }
 
+export interface ShopifySeo {
+  title: string | null;
+  description: string | null;
+}
+
 export interface ShopifyCollection {
   id: string;
   title: string;
   handle: string;
   image?: ShopifyImage | null;
+  description?: string;
+  updatedAt?: string;
+  seo?: ShopifySeo | null;
 }
 
 export interface ShopifyProductVariant {
@@ -41,7 +49,10 @@ export interface ShopifyProduct {
   title: string;
   handle: string;
   productType?: string;
+  vendor?: string;
   description: string;
+  updatedAt?: string;
+  seo?: ShopifySeo | null;
   featuredImage: ShopifyImage | null;
   images: { nodes: ShopifyImage[] };
   options?: ShopifyProductOption[];

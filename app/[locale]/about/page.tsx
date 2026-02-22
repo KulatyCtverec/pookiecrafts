@@ -1,6 +1,43 @@
 import { Heart } from "lucide-react";
 import NextImage from "next/image";
 import { getTranslations } from "next-intl/server";
+import type { Metadata } from "next";
+import { locales } from "@/lib/i18n/config";
+import { buildUrl } from "@/lib/seo";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "about" });
+  const url = buildUrl(`/${locale}/about`);
+  const alternates = locales.reduce<Record<string, string>>((acc, lang) => {
+    acc[lang] = buildUrl(`/${lang}/about`);
+    return acc;
+  }, {});
+
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+    alternates: {
+      canonical: url,
+      languages: alternates,
+    },
+    openGraph: {
+      title: t("title"),
+      description: t("subtitle"),
+      url,
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("subtitle"),
+    },
+  };
+}
 
 export default async function AboutPage() {
   const t = await getTranslations("about");
@@ -40,7 +77,7 @@ export default async function AboutPage() {
           </p>
         </div>
 
-        <div className="bg-gradient-to-br from-[#FFE6ED] to-[#FFF4E6] rounded-3xl p-8">
+        <div className="bg-linear-to-br from-[#FFE6ED] to-[#FFF4E6] rounded-3xl p-8">
           <h2 className="text-2xl mb-4">{t("ourValues")}</h2>
           <div className="grid sm:grid-cols-2 gap-6">
             <div>

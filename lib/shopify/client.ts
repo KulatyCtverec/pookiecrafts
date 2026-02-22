@@ -5,6 +5,8 @@ import {
   LOCALIZATION_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
   PRODUCTS_BY_TYPE_QUERY,
+  COLLECTIONS_PAGINATED_QUERY,
+  PRODUCTS_PAGINATED_QUERY,
 } from "./queries";
 import type {
   ShopifyCollection,
@@ -274,4 +276,51 @@ export async function getProductsByType(
     revalidate: 300,
   });
   return data.products?.nodes ?? [];
+}
+
+type ShopifyHandleNode = { handle: string; updatedAt?: string };
+
+async function paginateHandles(
+  query: string,
+  locale?: string,
+  limit?: number
+): Promise<ShopifyHandleNode[]> {
+  if (!isConfigured()) return [];
+  const language = toShopifyLanguage(locale);
+  const nodes: ShopifyHandleNode[] = [];
+  let cursor: string | null = null;
+  let hasNext = true;
+  let guard = 0;
+
+  while (hasNext && guard < 20) {
+    guard += 1;
+    const data: {
+      collections?: { nodes: ShopifyHandleNode[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } };
+      products?: { nodes: ShopifyHandleNode[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } };
+    } = await shopifyFetch({
+      query,
+      variables: { cursor, language },
+      revalidate: 3600,
+    });
+
+    const payload:
+      | { nodes: ShopifyHandleNode[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } }
+      | undefined =
+      data.collections ?? data.products;
+    if (!payload) break;
+    nodes.push(...payload.nodes);
+    if (limit && nodes.length >= limit) break;
+    hasNext = payload.pageInfo.hasNextPage;
+    cursor = payload.pageInfo.endCursor;
+  }
+
+  return limit ? nodes.slice(0, limit) : nodes;
+}
+
+export async function getCollectionHandles(locale?: string, limit?: number): Promise<ShopifyHandleNode[]> {
+  return paginateHandles(COLLECTIONS_PAGINATED_QUERY, locale, limit);
+}
+
+export async function getProductHandles(locale?: string, limit?: number): Promise<ShopifyHandleNode[]> {
+  return paginateHandles(PRODUCTS_PAGINATED_QUERY, locale, limit);
 }

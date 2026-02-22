@@ -5,6 +5,8 @@ export {
   getCollectionByHandle,
   getProductByHandle,
   getProductsByType,
+  getCollectionHandles,
+  getProductHandles,
 } from "./client";
 export type { ShopifyProductForColor } from "./client";
 export {

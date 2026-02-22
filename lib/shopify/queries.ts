@@ -24,6 +24,12 @@ export const COLLECTIONS_QUERY = `
         id
         title
         handle
+        updatedAt
+        description
+        seo {
+          title
+          description
+        }
         image {
           url
           altText
@@ -41,6 +47,12 @@ export const COLLECTION_BY_HANDLE_QUERY = `
       id
       title
       handle
+      updatedAt
+      description
+      seo {
+        title
+        description
+      }
       products(first: 50) {
         nodes {
           id
@@ -92,7 +104,13 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       title
       handle
       productType
+      vendor
       description
+      updatedAt
+      seo {
+        title
+        description
+      }
       featuredImage {
         url
         altText
@@ -142,6 +160,36 @@ export const PRODUCT_BY_HANDLE_QUERY = `
           amount
           currencyCode
         }
+      }
+    }
+  }
+`;
+
+export const COLLECTIONS_PAGINATED_QUERY = `
+  query getCollectionsPage($cursor: String, $language: LanguageCode) @inContext(language: $language) {
+    collections(first: 250, after: $cursor) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        handle
+        updatedAt
+      }
+    }
+  }
+`;
+
+export const PRODUCTS_PAGINATED_QUERY = `
+  query getProductsPage($cursor: String, $language: LanguageCode) @inContext(language: $language) {
+    products(first: 250, after: $cursor) {
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      nodes {
+        handle
+        updatedAt
       }
     }
   }

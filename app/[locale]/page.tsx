@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/design-system/Button";
 import { ProductCard } from "@/components/design-system/ProductCard";
@@ -6,6 +7,44 @@ import { ImageWithFallback } from "@/components/design-system/ImageWithFallback"
 import { getCollections, getCollectionByHandle } from "@/lib/shopify";
 import { Star, Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
+import { locales } from "@/lib/i18n/config";
+import { buildUrl } from "@/lib/seo";
+
+export const revalidate = 300;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "metadata" });
+  const url = buildUrl(`/${locale}`);
+  const alternates = locales.reduce<Record<string, string>>((acc, lang) => {
+    acc[lang] = buildUrl(`/${lang}`);
+    return acc;
+  }, {});
+
+  return {
+    title: t("title"),
+    description: t("description"),
+    alternates: {
+      canonical: url,
+      languages: alternates,
+    },
+    openGraph: {
+      title: t("title"),
+      description: t("description"),
+      url,
+      type: "website",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: t("title"),
+      description: t("description"),
+    },
+  };
+}
 
 export default async function HomePage({
   params,
@@ -120,7 +159,7 @@ export default async function HomePage({
                 href={`/collections/${card.handle}`}
                 className="group block bg-card rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
               >
-                <div className="aspect-[4/5] overflow-hidden bg-muted relative">
+                <div className="aspect-4/5 overflow-hidden bg-muted relative">
                   <ImageWithFallback
                     src={card.image ?? ""}
                     alt={card.title}

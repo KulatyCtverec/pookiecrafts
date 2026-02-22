@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { DM_Serif_Display, Nunito } from "next/font/google";
 import "./globals.css";
+import { getBaseUrl } from "@/lib/seo";
 
 const dmSerif = DM_Serif_Display({
   variable: "--font-dm-serif",
@@ -17,6 +18,17 @@ const nunito = Nunito({
 export const metadata: Metadata = {
   title: "PookieCrafts | Handmade Candles & Notebooks",
   description: "Handcrafted candles and notebooks made with love",
+  metadataBase: new URL(getBaseUrl()),
+  openGraph: {
+    title: "PookieCrafts | Handmade Candles & Notebooks",
+    description: "Handcrafted candles and notebooks made with love",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "PookieCrafts | Handmade Candles & Notebooks",
+    description: "Handcrafted candles and notebooks made with love",
+  },
 };
 
 export default async function RootLayout({
