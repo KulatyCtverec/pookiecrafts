@@ -225,7 +225,7 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
 
         <div className="space-y-6">
           <div>
-            <h1 className="text-3xl md:text-4xl mb-3">{product.title}</h1>
+            <h1 className="text-3xl md:text-4xl mb-1">{product.title}</h1>
             <p className="text-3xl font-semibold text-accent">
               {formatPrice(price.amount, currency, locale)}
             </p>

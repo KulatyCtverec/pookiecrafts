@@ -199,6 +199,7 @@ export const COLLECTIONS_PAGINATED_QUERY = `
       }
       nodes {
         handle
+        title
         updatedAt
       }
     }

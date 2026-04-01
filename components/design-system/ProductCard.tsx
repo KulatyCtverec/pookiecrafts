@@ -33,7 +33,7 @@ export function ProductCard({ product, locale = "en" }: ProductCardProps) {
   return (
     <Link
       href={`/products/${product.handle}`}
-      className="group block bg-card rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+      className="group block bg-card rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-0.5"
     >
       <div className="aspect-square overflow-hidden bg-muted relative">
         <ImageWithFallback
@@ -42,11 +42,11 @@ export function ProductCard({ product, locale = "en" }: ProductCardProps) {
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
       </div>
-      <div className="p-5">
-        <h3 className="text-lg font-semibold mb-1 group-hover:text-accent transition-colors">
+      <div className="p-4">
+        <h3 className="text-base font-semibold mb-1 line-clamp-2 min-h-10 group-hover:text-accent transition-colors">
           {product.title}
         </h3>
-        <p className="text-xl font-semibold text-accent">{priceFormatted}</p>
+        <p className="text-lg font-medium text-accent/90">{priceFormatted}</p>
       </div>
     </Link>
   );

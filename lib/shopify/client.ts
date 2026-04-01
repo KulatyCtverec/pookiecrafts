@@ -306,7 +306,7 @@ export async function getProductsByTypeSummary(
   return data.products?.nodes ?? [];
 }
 
-type ShopifyHandleNode = { handle: string; updatedAt?: string };
+type ShopifyHandleNode = { handle: string; updatedAt?: string; title?: string };
 
 async function paginateHandles(
   query: string,
@@ -347,6 +347,17 @@ async function paginateHandles(
 
 export async function getCollectionHandles(locale?: string, limit?: number): Promise<ShopifyHandleNode[]> {
   return paginateHandles(COLLECTIONS_PAGINATED_QUERY, locale, limit);
+}
+
+/** Všechny kolekce pro navigaci (názvy dle @inContext language). */
+export async function getNavCollections(
+  locale?: string
+): Promise<{ handle: string; title: string }[]> {
+  const nodes = await paginateHandles(COLLECTIONS_PAGINATED_QUERY, locale);
+  return nodes.map((n) => ({
+    handle: n.handle,
+    title: (n.title && n.title.trim()) || n.handle,
+  }));
 }
 
 export async function getProductHandles(locale?: string, limit?: number): Promise<ShopifyHandleNode[]> {

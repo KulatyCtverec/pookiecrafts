@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/design-system/Button";
+import { SmoothScrollLink } from "@/components/design-system/SmoothScrollLink";
 import { ProductCard } from "@/components/design-system/ProductCard";
 import { HeroCarousel } from "@/components/design-system/HeroCarousel";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
@@ -127,11 +128,11 @@ export default async function HomePage({
     carouselImagesRaw.length > 0
       ? carouselImagesRaw
       : [
-          {
-            url: "https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
-            alt: t("carouselAlt"),
-          },
-        ];
+        {
+          url: "https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
+          alt: t("carouselAlt"),
+        },
+      ];
 
   const browseCards = collections.slice(0, 3).map((c) => ({
     id: c.id,
@@ -160,11 +161,9 @@ export default async function HomePage({
               </p>
               <div className="flex flex-wrap gap-4">
                 <Button size="lg" asChild>
-                  <a href="#bestsellers">{t("shopNow")}</a>
+                  <SmoothScrollLink href="#bestsellers">{t("shopNow")}</SmoothScrollLink>
                 </Button>
-                <Button variant="secondary" size="lg" asChild>
-                  <Link href="/about">{t("ourStory")}</Link>
-                </Button>
+
               </div>
             </div>
             <div className="relative">
@@ -203,24 +202,26 @@ export default async function HomePage({
               <Link
                 key={card.id}
                 href={`/collections/${card.handle}`}
-                className="group block bg-card rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1"
+                className="group relative block rounded-3xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
-                <div className="aspect-4/5 overflow-hidden bg-muted relative">
+                <div className="aspect-square overflow-hidden bg-muted relative">
                   <ImageWithFallback
                     src={card.image ?? ""}
                     alt={card.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                    className="w-full h-full object-cover blur-[1.5px] group-hover:scale-105 transition-transform duration-300 z-0"
                   />
                   {!card.image && (
-                    <div className="absolute inset-0 flex items-center justify-center text-muted-foreground p-4">
+                    <div className="absolute inset-0 flex items-center justify-center text-white/90 p-4 text-center">
                       {card.title}
                     </div>
                   )}
-                </div>
-                <div className="p-5 text-center">
-                  <span className="text-lg font-semibold group-hover:text-accent transition-colors">
-                    {card.title}
-                  </span>
+                  <div className="absolute inset-0 z-20 flex items-center justify-center px-6 pointer-events-none">
+                    <span
+                      className="text-4xl font-normal text-white text-center [text-shadow:0_3px_14px_rgba(0,0,0,0.75)] group-hover:text-white/95 transition-colors [font-family:var(--font-dm-serif),'DM_Serif_Display',Georgia,serif]"
+                    >
+                      {card.title}
+                    </span>
+                  </div>
                 </div>
               </Link>
             ))}

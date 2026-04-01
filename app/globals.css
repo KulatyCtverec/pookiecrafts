@@ -119,6 +119,12 @@
     font-size: var(--font-size);
   }
 
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+
   body {
     @apply bg-background text-foreground;
     font-family: var(--font-nunito), "Nunito", -apple-system, BlinkMacSystemFont, sans-serif;

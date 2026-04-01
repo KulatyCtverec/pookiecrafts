@@ -44,7 +44,7 @@ export default async function LocaleLayout({
     <NextIntlClientProvider messages={messages} locale={locale}>
       <CartProvider locale={locale}>
         <div className="min-h-screen flex flex-col">
-          <Header />
+          <Header locale={locale} />
           <main className="flex-1">{children}</main>
           <Footer />
           <CartDrawer />
