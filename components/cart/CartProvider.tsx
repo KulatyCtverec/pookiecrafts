@@ -16,7 +16,7 @@ import {
   updateCartLine,
   removeCartLine,
 } from "@/lib/shopify/cart-client";
-import type { ShopifyCart, ShopifyCartLine } from "@/lib/shopify";
+import { getVariantMaxQuantity, type ShopifyCart } from "@/lib/shopify";
 
 const CART_ID_KEY = "pookiecrafts-cart-id";
 
@@ -211,10 +211,13 @@ export function CartProvider({
     async (lineId: string, quantity: number) => {
       if (!cart?.id) return;
       setCartError(null);
+      const line = cart.lines.nodes.find((l) => l.id === lineId);
+      if (quantity > 0 && line) {
+        const max = getVariantMaxQuantity(line.merchandise);
+        quantity = Math.min(quantity, max);
+      }
       const prevQuantity =
-        pendingQuantities[lineId] ??
-        cart.lines.nodes.find((l) => l.id === lineId)?.quantity ??
-        0;
+        pendingQuantities[lineId] ?? line?.quantity ?? 0;
       setPendingQuantities((prev) => ({ ...prev, [lineId]: quantity }));
       if (quantity <= 0) {
         setCart((prev) => {

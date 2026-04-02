@@ -5,7 +5,7 @@ import { useCart } from "./CartProvider";
 import type { OptimisticCartLineSnapshot } from "./CartProvider";
 import { Button } from "@/components/design-system/Button";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
-import type { ShopifyCartLine } from "@/lib/shopify";
+import { getVariantMaxQuantity, type ShopifyCartLine } from "@/lib/shopify";
 import { useTranslations } from "next-intl";
 import { useLocale } from "next-intl";
 
@@ -199,6 +199,7 @@ function CartLineItem({
   const price = line.merchandise.price.amount;
   const currency = line.merchandise.price.currencyCode;
   const img = line.merchandise.image?.url;
+  const maxQuantity = getVariantMaxQuantity(line.merchandise);
 
   return (
     <div className="flex gap-4 bg-background rounded-2xl p-4">
@@ -230,8 +231,10 @@ function CartLineItem({
             <span className="w-6 text-center text-sm">{line.quantity}</span>
             <button
               type="button"
-              disabled={isPending}
-              onClick={() => onUpdate(line.quantity + 1)}
+              disabled={isPending || line.quantity >= maxQuantity}
+              onClick={() =>
+                onUpdate(Math.min(line.quantity + 1, maxQuantity))
+              }
               className="w-6 h-6 rounded-full hover:bg-muted transition-colors flex items-center justify-center disabled:opacity-50 disabled:pointer-events-none"
             >
               <Plus className="w-3 h-3" />

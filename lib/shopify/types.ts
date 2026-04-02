@@ -15,6 +15,13 @@ export interface ShopifySeo {
   description: string | null;
 }
 
+/** Položky hero carouselu z metaobjectu `homepage_products`. */
+export interface HomepageCarouselImage {
+  id: string;
+  url: string;
+  alt: string;
+}
+
 export interface ShopifyCollection {
   id: string;
   title: string;
@@ -29,6 +36,10 @@ export interface ShopifyProductVariant {
   id: string;
   title: string;
   availableForSale: boolean;
+  /** Zda jde o předobjednávku / prodej i bez skladové zásoby. */
+  currentlyNotInStock?: boolean;
+  /** Počet kusu k prodeji online; může být null, pokud sklad není v Storefront API vystavený. */
+  quantityAvailable?: number | null;
   price: ShopifyMoney;
   image?: ShopifyImage | null;
   selectedOptions: { name: string; value: string }[];
@@ -51,6 +62,8 @@ export interface ShopifyProduct {
   productType?: string;
   vendor?: string;
   description: string;
+  /** HTML z Shopify rich text editoru (Storefront `descriptionHtml`). */
+  descriptionHtml?: string | null;
   updatedAt?: string;
   seo?: ShopifySeo | null;
   availableForSale?: boolean;
@@ -84,6 +97,9 @@ export interface ShopifyCartLine {
   merchandise: {
     id: string;
     title: string;
+    availableForSale: boolean;
+    currentlyNotInStock?: boolean;
+    quantityAvailable?: number | null;
     product: {
       title: string;
       handle: string;

@@ -5,7 +5,12 @@ import { SmoothScrollLink } from "@/components/design-system/SmoothScrollLink";
 import { ProductCard } from "@/components/design-system/ProductCard";
 import { HeroCarousel } from "@/components/design-system/HeroCarousel";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
-import { getCollections, getCollectionByHandle, getProductsByTypeSummary } from "@/lib/shopify";
+import {
+  getCollections,
+  getCollectionByHandle,
+  getHomepageCarouselImages,
+  getProductsByTypeSummary,
+} from "@/lib/shopify";
 import { Star, Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { locales } from "@/lib/i18n/config";
@@ -121,14 +126,13 @@ export default async function HomePage({
     ? bestsellersFromTypes
     : fallbackBestsellers;
 
-  const carouselImagesRaw = bestsellerProducts
-    .map((p) => (p.image ? { url: p.image, alt: p.title } : null))
-    .filter(Boolean) as { url: string; alt: string }[];
+  const carouselFromMetaobjects = await getHomepageCarouselImages(locale);
   const carouselImages =
-    carouselImagesRaw.length > 0
-      ? carouselImagesRaw
+    carouselFromMetaobjects.length > 0
+      ? carouselFromMetaobjects
       : [
         {
+          id: "fallback",
           url: "https://images.unsplash.com/photo-1662994985065-a5d3e39d25c4?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&q=80&w=1080",
           alt: t("carouselAlt"),
         },

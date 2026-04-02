@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import { ImageWithFallback } from "./ImageWithFallback";
 
+export interface HeroCarouselImage {
+  url: string;
+  alt: string;
+  /** Stabilní klíč pro React (metaobject id). */
+  id?: string;
+}
+
 interface HeroCarouselProps {
-  images: { url: string; alt: string }[];
+  images: HeroCarouselImage[];
   intervalMs?: number;
 }
 
@@ -25,7 +32,7 @@ export function HeroCarousel({ images, intervalMs = 5000 }: HeroCarouselProps) {
     <div className="relative w-full aspect-[16/10] max-h-[500px] rounded-3xl overflow-hidden shadow-2xl bg-muted">
       {images.map((img, i) => (
         <div
-          key={img.url}
+          key={img.id ?? `${img.url}-${i}`}
           className="absolute inset-0 transition-opacity duration-700 ease-in-out"
           style={{
             opacity: i === index ? 1 : 0,

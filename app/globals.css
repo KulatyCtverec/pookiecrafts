@@ -202,3 +202,95 @@
     animation: accordion-up 0.2s ease-out;
   }
 }
+
+/* Shopify product descriptionHtml — typografie pro vnořené značky */
+@layer components {
+  .shopify-rich-text {
+    font-size: 0.95rem;
+    line-height: 1.65;
+  }
+
+  .shopify-rich-text :where(p) {
+    margin-bottom: 0.75em;
+  }
+
+  .shopify-rich-text :where(p):last-child {
+    margin-bottom: 0;
+  }
+
+  .shopify-rich-text :where(ul, ol) {
+    margin: 0.5em 0 0.75em;
+    padding-left: 1.35em;
+  }
+
+  .shopify-rich-text :where(ul) {
+    list-style-type: disc;
+  }
+
+  .shopify-rich-text :where(ol) {
+    list-style-type: decimal;
+  }
+
+  .shopify-rich-text :where(li) {
+    margin-bottom: 0.2em;
+  }
+
+  .shopify-rich-text :where(a) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .shopify-rich-text :where(a:hover) {
+    opacity: 0.88;
+  }
+
+  .shopify-rich-text :where(h1, h2, h3, h4) {
+    font-family: var(--font-serif);
+    color: var(--foreground);
+    font-weight: 400;
+    line-height: 1.3;
+    margin-top: 1rem;
+    margin-bottom: 0.45rem;
+  }
+
+  .shopify-rich-text :where(h1, h2, h3, h4):first-child {
+    margin-top: 0;
+  }
+
+  .shopify-rich-text :where(h1) {
+    font-size: 1.5rem;
+  }
+
+  .shopify-rich-text :where(h2) {
+    font-size: 1.35rem;
+  }
+
+  .shopify-rich-text :where(h3) {
+    font-size: 1.2rem;
+  }
+
+  .shopify-rich-text :where(h4) {
+    font-size: 1.05rem;
+    font-weight: var(--font-weight-medium);
+  }
+
+  .shopify-rich-text :where(strong, b) {
+    font-weight: var(--font-weight-medium);
+    color: var(--foreground);
+  }
+
+  .shopify-rich-text :where(img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-md);
+    margin: 0.65em 0;
+  }
+
+  .shopify-rich-text :where(blockquote) {
+    border-left: 3px solid var(--accent);
+    padding-left: 1em;
+    margin: 0.75em 0;
+    font-style: italic;
+  }
+}

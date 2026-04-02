@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/design-system/Button";
 import { QuantitySelector } from "@/components/design-system/QuantitySelector";
@@ -10,7 +10,11 @@ import { Truck } from "lucide-react";
 import { BackButton } from "@/components/design-system/BackButton";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
-import type { ShopifyProduct, ShopifyProductForColor } from "@/lib/shopify";
+import {
+  getVariantMaxQuantity,
+  type ShopifyProduct,
+  type ShopifyProductForColor,
+} from "@/lib/shopify";
 
 interface ProductDetailClientProps {
   product: ShopifyProduct;
@@ -74,6 +78,21 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
   const selectedVariant = product.variants.nodes.find(
     (v) => v.id === selectedVariantId
   ) ?? product.variants.nodes[0];
+
+  const maxQuantity = useMemo(() => {
+    const v =
+      product.variants.nodes.find((node) => node.id === selectedVariantId) ??
+      product.variants.nodes[0];
+    return getVariantMaxQuantity(v);
+  }, [product.variants.nodes, selectedVariantId]);
+
+  useEffect(() => {
+    setQuantity((q) => {
+      if (maxQuantity <= 0) return 0;
+      return Math.min(Math.max(1, q), maxQuantity);
+    });
+  }, [maxQuantity, selectedVariantId]);
+
   const images = product.images.nodes.length > 0
     ? product.images.nodes
     : product.featuredImage
@@ -95,16 +114,16 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
       COLOR_OPTION_NAMES.includes(o.name?.toLowerCase() ?? "")
     )?.name ??
     (optionNamesFromProduct.length === 1 &&
-    !["size", "velikost", "title"].includes(optionNamesFromProduct[0]?.toLowerCase() ?? "")
+      !["size", "velikost", "title"].includes(optionNamesFromProduct[0]?.toLowerCase() ?? "")
       ? optionNamesFromProduct[0]
       : undefined);
   const colorVariants = colorOptionName
     ? product.variants.nodes.map((v) => {
-        const colorVal = v.selectedOptions.find(
-          (o) => o.name === colorOptionName
-        )?.value;
-        return colorVal ? { colorValue: colorVal, variantId: v.id } : null;
-      }).filter(Boolean) as { colorValue: string; variantId: string }[]
+      const colorVal = v.selectedOptions.find(
+        (o) => o.name === colorOptionName
+      )?.value;
+      return colorVal ? { colorValue: colorVal, variantId: v.id } : null;
+    }).filter(Boolean) as { colorValue: string; variantId: string }[]
     : [];
   const uniqueColors = colorVariants.reduce(
     (acc, c) => {
@@ -124,9 +143,9 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
   const variantImagesForThumbnails =
     !useRelatedProducts && uniqueColors.length > 0
       ? uniqueColors
-          .map(({ variantId }) => product.variants.nodes.find((v) => v.id === variantId))
-          .filter((v): v is NonNullable<typeof v> => !!v?.image)
-          .map((v) => ({ variantId: v.id, image: v.image! }))
+        .map(({ variantId }) => product.variants.nodes.find((v) => v.id === variantId))
+        .filter((v): v is NonNullable<typeof v> => !!v?.image)
+        .map((v) => ({ variantId: v.id, image: v.image! }))
       : [];
 
   const hasVariantImages = variantImagesForThumbnails.length > 0;
@@ -136,7 +155,7 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
     : (images[selectedImage] ?? product.featuredImage ?? fallbackImage);
 
   const handleAddToCart = async () => {
-    if (!selectedVariant?.id) return;
+    if (!selectedVariant?.id || maxQuantity <= 0 || quantity <= 0) return;
     const snapshot: OptimisticCartLineSnapshot = {
       variantId: selectedVariant.id,
       quantity,
@@ -157,11 +176,12 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
   const price = selectedVariant?.price ?? product.priceRange.minVariantPrice;
   const currency = price.currencyCode;
 
-  const addToCartLabel = !selectedVariant?.availableForSale
-    ? t("outOfStock")
-    : isPendingAdd
-      ? t("adding")
-      : t("addToCart");
+  const addToCartLabel =
+    !selectedVariant?.availableForSale || maxQuantity <= 0
+      ? t("outOfStock")
+      : isPendingAdd
+        ? t("adding")
+        : t("addToCart");
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
@@ -233,11 +253,11 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
 
           {((useRelatedProducts && relatedWithColors.length > 0) ||
             (!useRelatedProducts && uniqueColors.length > 0)) && (
-            <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-sm text-muted-foreground">{t("color")}</span>
-              <div className="flex gap-2">
-                {useRelatedProducts
-                  ? relatedWithColors.map(({ handle, hex, colorName }) => {
+              <div className="flex items-center gap-3 flex-wrap">
+                <span className="text-sm text-muted-foreground">{t("color")}</span>
+                <div className="flex gap-2">
+                  {useRelatedProducts
+                    ? relatedWithColors.map(({ handle, hex, colorName }) => {
                       const isSelected = handle === product.handle;
                       return (
                         <Link
@@ -254,7 +274,7 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
                         />
                       );
                     })
-                  : uniqueColors.map(({ colorValue, variantId }) => {
+                    : uniqueColors.map(({ colorValue, variantId }) => {
                       const isSelected = selectedVariantId === variantId;
                       const hex =
                         colorOptionName != null
@@ -301,14 +321,32 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
                         />
                       );
                     })}
+                </div>
               </div>
+            )}
+          {(product.descriptionHtml?.trim() || product.description?.trim()) && (
+            <div className="pt-6 border-t border-border space-y-4">
+              {product.descriptionHtml?.trim() ? (
+                <div
+                  className="shopify-rich-text text-muted-foreground"
+                  dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                />
+              ) : (
+                <p className="text-muted-foreground whitespace-pre-wrap">
+                  {product.description}
+                </p>
+              )}
             </div>
           )}
-
           <div className="space-y-4">
             <div>
               <label className="block mb-3 text-sm">{t("quantity")}</label>
-              <QuantitySelector value={quantity} onChange={setQuantity} />
+              <QuantitySelector
+                value={quantity}
+                onChange={setQuantity}
+                min={maxQuantity <= 0 ? 0 : 1}
+                max={Math.max(maxQuantity, 0)}
+              />
             </div>
 
             <div className="flex flex-col gap-3">
@@ -320,7 +358,12 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
                   size="lg"
                   className="flex-1"
                   onClick={handleAddToCart}
-                  disabled={!selectedVariant?.availableForSale || isPendingAdd}
+                  disabled={
+                    !selectedVariant?.availableForSale ||
+                    isPendingAdd ||
+                    maxQuantity <= 0 ||
+                    quantity <= 0
+                  }
                 >
                   {addToCartLabel}
                 </Button>
@@ -328,14 +371,7 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
             </div>
           </div>
 
-          {product.description && (
-            <div className="pt-6 border-t border-border space-y-4">
-              <h3 className="font-semibold mb-2">{t("description")}</h3>
-              <p className="text-muted-foreground whitespace-pre-wrap">
-                {product.description}
-              </p>
-            </div>
-          )}
+
 
           <div className="bg-muted rounded-2xl p-6 flex gap-4">
             <Truck className="w-6 h-6 text-accent shrink-0 mt-1" />
@@ -354,9 +390,14 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
           size="lg"
           className="w-full"
           onClick={handleAddToCart}
-          disabled={!selectedVariant?.availableForSale || isPendingAdd}
+          disabled={
+            !selectedVariant?.availableForSale ||
+            isPendingAdd ||
+            maxQuantity <= 0 ||
+            quantity <= 0
+          }
         >
-          {!selectedVariant?.availableForSale
+          {!selectedVariant?.availableForSale || maxQuantity <= 0
             ? t("outOfStock")
             : isPendingAdd
               ? t("adding")

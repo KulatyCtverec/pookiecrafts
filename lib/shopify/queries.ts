@@ -122,6 +122,7 @@ export const PRODUCTS_BY_TYPE_SUMMARY_QUERY = `
   }
 `;
 
+/* Variants: sklad vyžaduje Storefront scope `unauthenticated_read_product_inventory`. */
 export const PRODUCT_BY_HANDLE_QUERY = `
   query getProductByHandle($handle: String!, $language: LanguageCode) @inContext(language: $language) {
     product(handle: $handle) {
@@ -131,6 +132,7 @@ export const PRODUCT_BY_HANDLE_QUERY = `
       productType
       vendor
       description
+      descriptionHtml
       updatedAt
       seo {
         title
@@ -164,6 +166,8 @@ export const PRODUCT_BY_HANDLE_QUERY = `
           id
           title
           availableForSale
+          currentlyNotInStock
+          quantityAvailable
           price {
             amount
             currencyCode
@@ -221,20 +225,13 @@ export const PRODUCTS_PAGINATED_QUERY = `
   }
 `;
 
-export const CART_CREATE_MUTATION = `
-  mutation cartCreate($language: LanguageCode) @inContext(language: $language) {
-    cartCreate {
-      cart {
-        id
-        checkoutUrl
-        lines(first: 100) {
-          nodes {
-            id
-            quantity
-            merchandise {
-              ... on ProductVariant {
+/** Společná pole ProductVariant ve všech cart dotazech (včetně skladu). */
+const CART_PRODUCT_VARIANT_FIELDS = `
                 id
                 title
+                availableForSale
+                currentlyNotInStock
+                quantityAvailable
                 product {
                   title
                   handle
@@ -252,7 +249,20 @@ export const CART_CREATE_MUTATION = `
                 selectedOptions {
                   name
                   value
-                }
+                }`;
+
+export const CART_CREATE_MUTATION = `
+  mutation cartCreate($language: LanguageCode) @inContext(language: $language) {
+    cartCreate {
+      cart {
+        id
+        checkoutUrl
+        lines(first: 100) {
+          nodes {
+            id
+            quantity
+            merchandise {
+              ... on ProductVariant {${CART_PRODUCT_VARIANT_FIELDS}
               }
             }
           }
@@ -276,27 +286,7 @@ export const CART_GET_QUERY = `
           id
           quantity
           merchandise {
-            ... on ProductVariant {
-              id
-              title
-              product {
-                title
-                handle
-              }
-              price {
-                amount
-                currencyCode
-              }
-              image {
-                url
-                altText
-                width
-                height
-              }
-              selectedOptions {
-                name
-                value
-              }
+            ... on ProductVariant {${CART_PRODUCT_VARIANT_FIELDS}
             }
           }
         }
@@ -316,27 +306,7 @@ export const CART_LINES_ADD_MUTATION = `
             id
             quantity
             merchandise {
-              ... on ProductVariant {
-                id
-                title
-                product {
-                  title
-                  handle
-                }
-                price {
-                  amount
-                  currencyCode
-                }
-                image {
-                  url
-                  altText
-                  width
-                  height
-                }
-                selectedOptions {
-                  name
-                  value
-                }
+              ... on ProductVariant {${CART_PRODUCT_VARIANT_FIELDS}
               }
             }
           }
@@ -361,27 +331,7 @@ export const CART_LINES_UPDATE_MUTATION = `
             id
             quantity
             merchandise {
-              ... on ProductVariant {
-                id
-                title
-                product {
-                  title
-                  handle
-                }
-                price {
-                  amount
-                  currencyCode
-                }
-                image {
-                  url
-                  altText
-                  width
-                  height
-                }
-                selectedOptions {
-                  name
-                  value
-                }
+              ... on ProductVariant {${CART_PRODUCT_VARIANT_FIELDS}
               }
             }
           }
@@ -406,27 +356,7 @@ export const CART_LINES_REMOVE_MUTATION = `
             id
             quantity
             merchandise {
-              ... on ProductVariant {
-                id
-                title
-                product {
-                  title
-                  handle
-                }
-                price {
-                  amount
-                  currencyCode
-                }
-                image {
-                  url
-                  altText
-                  width
-                  height
-                }
-                selectedOptions {
-                  name
-                  value
-                }
+              ... on ProductVariant {${CART_PRODUCT_VARIANT_FIELDS}
               }
             }
           }
@@ -435,6 +365,35 @@ export const CART_LINES_REMOVE_MUTATION = `
       userErrors {
         field
         message
+      }
+    }
+  }
+`;
+
+/** Metaobject typ `homepage_products` — pole `photo` (soubor), `key` (text). Scope: `unauthenticated_read_metaobjects`. */
+export const HOMEPAGE_CAROUSEL_METAOBJECTS_QUERY = `
+  query homepageCarouselMetaobjects($language: LanguageCode) @inContext(language: $language) {
+    metaobjects(type: "homepage_products", first: 20, sortKey: "updated_at") {
+      nodes {
+        id
+        handle
+        photo: field(key: "photo") {
+          reference {
+            ... on MediaImage {
+              image {
+                url
+                altText
+              }
+            }
+            ... on GenericFile {
+              url
+              alt
+            }
+          }
+        }
+        keyField: field(key: "key") {
+          value
+        }
       }
     }
   }

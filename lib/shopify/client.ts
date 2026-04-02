@@ -2,6 +2,7 @@ import { createStorefrontClient } from "@shopify/hydrogen-react";
 import {
   COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
+  HOMEPAGE_CAROUSEL_METAOBJECTS_QUERY,
   LOCALIZATION_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
   PRODUCTS_BY_TYPE_QUERY,
@@ -10,6 +11,7 @@ import {
   PRODUCTS_PAGINATED_QUERY,
 } from "./queries";
 import type {
+  HomepageCarouselImage,
   ShopifyCollection,
   ShopifyCollectionWithProducts,
   ShopifyProduct,
@@ -304,6 +306,75 @@ export async function getProductsByTypeSummary(
     revalidate: 300,
   });
   return data.products?.nodes ?? [];
+}
+
+type CarouselMetaobjectReference =
+  | {
+      image?: { url: string; altText: string | null } | null;
+      url?: undefined;
+    }
+  | {
+      url?: string | null;
+      alt?: string | null;
+      image?: undefined;
+    };
+
+interface CarouselMetaobjectNode {
+  id: string;
+  handle: string;
+  photo: { reference: CarouselMetaobjectReference | null } | null;
+  keyField: { value: string | null } | null;
+}
+
+function parseHomepageCarouselNode(
+  node: CarouselMetaobjectNode
+): HomepageCarouselImage | null {
+  const ref = node.photo?.reference;
+  let url: string | null = null;
+  let alt: string | null = null;
+  if (ref && "image" in ref && ref.image?.url) {
+    url = ref.image.url;
+    alt = ref.image.altText ?? null;
+  } else if (ref && "url" in ref && ref.url) {
+    url = String(ref.url);
+    alt = (ref.alt as string | null) ?? null;
+  }
+  if (!url?.trim()) return null;
+  const keyText = node.keyField?.value?.trim();
+  return {
+    id: node.id,
+    url: url.trim(),
+    alt: (alt && alt.trim()) || keyText || node.handle || "Carousel",
+  };
+}
+
+/**
+ * Obrázky pro hero carousel z metaobjectů typu `homepage_products`.
+ * Při chybě scope `unauthenticated_read_metaobjects` nebo prázdném výsledku vrátí [].
+ */
+export async function getHomepageCarouselImages(
+  locale?: string
+): Promise<HomepageCarouselImage[]> {
+  if (!isConfigured()) return [];
+  const language = toShopifyLanguage(locale);
+  try {
+    const data = await shopifyFetch<{
+      metaobjects: { nodes: CarouselMetaobjectNode[] };
+    }>({
+      query: HOMEPAGE_CAROUSEL_METAOBJECTS_QUERY,
+      variables: { language },
+      revalidate: 300,
+    });
+    const nodes = data.metaobjects?.nodes ?? [];
+    return nodes
+      .map(parseHomepageCarouselNode)
+      .filter((x): x is HomepageCarouselImage => x !== null);
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Shopify] getHomepageCarouselImages:", e);
+    }
+    return [];
+  }
 }
 
 type ShopifyHandleNode = { handle: string; updatedAt?: string; title?: string };

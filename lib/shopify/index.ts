@@ -7,6 +7,7 @@ export {
   getProductsByType,
   getCollectionHandles,
   getProductHandles,
+  getHomepageCarouselImages,
 } from "./client";
 export { getProductsByTypeSummary } from "./client";
 export type { ShopifyProductForColor } from "./client";
@@ -18,6 +19,7 @@ export {
   removeCartLine,
 } from "./cart-actions";
 export type {
+  HomepageCarouselImage,
   ShopifyCollection,
   ShopifyCollectionWithProducts,
   ShopifyProduct,
@@ -27,3 +29,8 @@ export type {
   ShopifyImage,
   ShopifyMoney,
 } from "./types";
+export {
+  DEFAULT_QUANTITY_CAP,
+  getVariantMaxQuantity,
+} from "./variant-max-quantity";
+export type { VariantQuantityCapInput } from "./variant-max-quantity";
