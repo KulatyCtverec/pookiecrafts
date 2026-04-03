@@ -16,6 +16,7 @@
     "contact": "Contact",
     "toggleMenu": "Ouvrir le menu",
     "openCart": "Ouvrir le panier",
+    "openWishlist": "Liste de souhaits",
     "selectLanguage": "Choisir la langue"
   },
   "home": {
@@ -59,6 +60,18 @@
     "updatingCart": "Mise à jour du panier…",
     "adding": "Ajout en cours…",
     "remove": "Supprimer"
+  },
+  "wishlist": {
+    "metaTitle": "Liste de souhaits | PookieCrafts",
+    "metaDescription": "Vos produits favoris enregistrés",
+    "title": "Liste de souhaits",
+    "empty": "Vous n'avez pas encore enregistré de produits.",
+    "browseShop": "Parcourir les catégories",
+    "productCountLine": "{count, plural, one {Nous avons trouvé # produit} other {Nous avons trouvé # produits}}",
+    "loading": "Chargement…",
+    "loadError": "Impossible de charger la liste de souhaits. Veuillez réessayer.",
+    "addToFavorites": "Ajouter à la liste de souhaits",
+    "removeFromFavorites": "Retirer de la liste de souhaits"
   },
   "footer": {
     "shop": "Boutique",

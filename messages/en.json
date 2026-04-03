@@ -16,6 +16,7 @@
     "contact": "Contact",
     "toggleMenu": "Toggle menu",
     "openCart": "Open cart",
+    "openWishlist": "Wishlist",
     "selectLanguage": "Select language"
   },
   "home": {
@@ -59,6 +60,18 @@
     "updatingCart": "Updating cart…",
     "adding": "Adding…",
     "remove": "Remove"
+  },
+  "wishlist": {
+    "metaTitle": "Wishlist | PookieCrafts",
+    "metaDescription": "Your saved favorite products",
+    "title": "Wishlist",
+    "empty": "You have not saved any products yet.",
+    "browseShop": "Browse categories",
+    "productCountLine": "{count, plural, one {We found # product} other {We found # products}}",
+    "loading": "Loading…",
+    "loadError": "We could not load your wishlist. Please try again.",
+    "addToFavorites": "Add to wishlist",
+    "removeFromFavorites": "Remove from wishlist"
   },
   "footer": {
     "shop": "Shop",

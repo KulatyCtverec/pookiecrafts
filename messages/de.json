@@ -16,6 +16,7 @@
     "contact": "Kontakt",
     "toggleMenu": "Menü umschalten",
     "openCart": "Warenkorb öffnen",
+    "openWishlist": "Wunschliste",
     "selectLanguage": "Sprache wählen"
   },
   "home": {
@@ -59,6 +60,18 @@
     "updatingCart": "Warenkorb wird aktualisiert…",
     "adding": "Wird hinzugefügt…",
     "remove": "Entfernen"
+  },
+  "wishlist": {
+    "metaTitle": "Wunschliste | PookieCrafts",
+    "metaDescription": "Ihre gespeicherten Lieblingsprodukte",
+    "title": "Wunschliste",
+    "empty": "Sie haben noch keine Produkte gespeichert.",
+    "browseShop": "Kategorien durchstöbern",
+    "productCountLine": "{count, plural, one {Wir haben # Produkt gefunden} other {Wir haben # Produkte gefunden}}",
+    "loading": "Wird geladen…",
+    "loadError": "Die Wunschliste konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+    "addToFavorites": "Zur Wunschliste hinzufügen",
+    "removeFromFavorites": "Von der Wunschliste entfernen"
   },
   "footer": {
     "shop": "Shop",

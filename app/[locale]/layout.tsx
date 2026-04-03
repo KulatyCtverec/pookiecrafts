@@ -5,6 +5,7 @@ import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { CartProvider } from "@/components/cart/CartProvider";
 import { CartDrawer } from "@/components/cart/CartDrawer";
+import { FavoritesProvider } from "@/components/favorites/FavoritesProvider";
 
 export async function generateMetadata({
   params,
@@ -42,14 +43,16 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      <CartProvider locale={locale}>
-        <div className="min-h-screen flex flex-col">
-          <Header locale={locale} />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <CartDrawer />
-        </div>
-      </CartProvider>
+      <FavoritesProvider>
+        <CartProvider locale={locale}>
+          <div className="min-h-screen flex flex-col">
+            <Header locale={locale} />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <CartDrawer />
+          </div>
+        </CartProvider>
+      </FavoritesProvider>
     </NextIntlClientProvider>
   );
 }

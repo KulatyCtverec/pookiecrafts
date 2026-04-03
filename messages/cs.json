@@ -16,6 +16,7 @@
     "contact": "Kontakt",
     "toggleMenu": "Otevřít menu",
     "openCart": "Otevřít košík",
+    "openWishlist": "Seznam přání",
     "selectLanguage": "Vybrat jazyk"
   },
   "home": {
@@ -59,6 +60,18 @@
     "updatingCart": "Aktualizace košíku…",
     "adding": "Přidávám…",
     "remove": "Odebrat"
+  },
+  "wishlist": {
+    "metaTitle": "Seznam přání | PookieCrafts",
+    "metaDescription": "Uložené oblíbené produkty",
+    "title": "Seznam přání",
+    "empty": "Zatím jste si neuložili žádné produkty.",
+    "browseShop": "Procházet kategorie",
+    "productCountLine": "{count, plural, one {Nalezli jsme # produkt} few {Nalezli jsme # produkty} many {Nalezli jsme # produktů} other {Nalezli jsme # produktů}}",
+    "loading": "Načítání…",
+    "loadError": "Nepodařilo se načíst seznam přání. Zkuste to prosím znovu.",
+    "addToFavorites": "Přidat do oblíbených",
+    "removeFromFavorites": "Odebrat z oblíbených"
   },
   "footer": {
     "shop": "Obchod",

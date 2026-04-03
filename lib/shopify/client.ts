@@ -269,6 +269,45 @@ export async function getProductByHandle(
   return data.product;
 }
 
+const WISHLIST_HANDLE_MAX = 50;
+
+function shopifyProductToSummary(p: ShopifyProduct): ShopifyProductSummary {
+  return {
+    id: p.id,
+    handle: p.handle,
+    title: p.title,
+    availableForSale: p.availableForSale ?? true,
+    featuredImage: p.featuredImage,
+    priceRange: p.priceRange,
+  };
+}
+
+/**
+ * Load multiple products by handle for wishlist.
+ * Uses one Storefront query per handle — the `handle:a OR handle:b` search often returns an
+ * incomplete set on success, which caused missing items and accidental localStorage pruning.
+ */
+export async function getProductsByHandles(
+  handles: string[],
+  locale?: string
+): Promise<ShopifyProductSummary[]> {
+  if (!isConfigured() || handles.length === 0) return [];
+  const unique = [
+    ...new Set(
+      handles.map((h) => h.trim()).filter((h) => h.length > 0)
+    ),
+  ].slice(0, WISHLIST_HANDLE_MAX);
+  if (unique.length === 0) return [];
+
+  const rows = await Promise.all(
+    unique.map((handle) => getProductByHandle(handle, locale))
+  );
+
+  return rows
+    .filter((p): p is ShopifyProduct => p !== null)
+    .map(shopifyProductToSummary);
+}
+
 export type ShopifyProductForColor = Pick<
   ShopifyProduct,
   "id" | "handle" | "title" | "options"

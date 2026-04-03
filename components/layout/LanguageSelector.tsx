@@ -69,7 +69,7 @@ export function LanguageSelector() {
   };
 
   return (
-    <div className="relative" ref={dropdownRef}>
+    <div className="relative z-30" ref={dropdownRef}>
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
@@ -82,7 +82,7 @@ export function LanguageSelector() {
       </button>
       {isOpen && (
         <div
-          className="absolute right-0 top-full mt-2 py-2 bg-card rounded-2xl shadow-lg border border-border min-w-[160px] z-50"
+          className="absolute right-0 top-full z-200 mt-2 max-h-[min(70vh,320px)] overflow-y-auto py-2 bg-card rounded-2xl shadow-xl border border-border min-w-[160px]"
           role="listbox"
         >
           {locales.map((loc) => (

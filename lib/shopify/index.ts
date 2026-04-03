@@ -4,6 +4,7 @@ export {
   getCollections,
   getCollectionByHandle,
   getProductByHandle,
+  getProductsByHandles,
   getProductsByType,
   getCollectionHandles,
   getProductHandles,

@@ -16,6 +16,7 @@
     "contact": "Kontakt",
     "toggleMenu": "Otwórz menu",
     "openCart": "Otwórz koszyk",
+    "openWishlist": "Lista życzeń",
     "selectLanguage": "Wybierz język"
   },
   "home": {
@@ -59,6 +60,18 @@
     "updatingCart": "Aktualizacja koszyka…",
     "adding": "Dodawanie…",
     "remove": "Usuń"
+  },
+  "wishlist": {
+    "metaTitle": "Lista życzeń | PookieCrafts",
+    "metaDescription": "Zapisane ulubione produkty",
+    "title": "Lista życzeń",
+    "empty": "Nie zapisałeś jeszcze żadnych produktów.",
+    "browseShop": "Przeglądaj kategorie",
+    "productCountLine": "{count, plural, one {Znaleźliśmy # produkt} few {Znaleźliśmy # produkty} many {Znaleźliśmy # produktów} other {Znaleźliśmy # produktów}}",
+    "loading": "Ładowanie…",
+    "loadError": "Nie udało się wczytać listy życzeń. Spróbuj ponownie.",
+    "addToFavorites": "Dodaj do listy życzeń",
+    "removeFromFavorites": "Usuń z listy życzeń"
   },
   "footer": {
     "shop": "Sklep",
