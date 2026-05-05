@@ -10,9 +10,9 @@
   },
   "nav": {
     "home": "Startseite",
-    "collections": "Categories",
+    "collections": "Kategorien",
     "about": "Über uns",
-    "faq": "FAQ",
+    "faq": "Häufige Fragen",
     "contact": "Kontakt",
     "toggleMenu": "Menü umschalten",
     "openCart": "Warenkorb öffnen",
@@ -20,16 +20,16 @@
     "selectLanguage": "Sprache wählen"
   },
   "home": {
-    "heroTitle": "Create your cozy moment",
-    "heroSubtitle": "Light a candle, open your journal, and slow down. A little space just for you.",
+    "heroTitle": "Schaffe dir deinen gemütlichen Moment",
+    "heroSubtitle": "Zünde eine Kerze an, öffne dein Journal und werde langsamer. Ein kleiner Raum nur für dich.",
     "shopNow": "Jetzt einkaufen",
     "ourStory": "Unsere Geschichte",
     "bestsellers": "Bestseller",
-    "bestsellersSubtitle": "It's more than just products",
-    "browseCollections": "Shop by category",
+    "bestsellersSubtitle": "Es ist mehr als nur Produkte",
+    "browseCollections": "Nach Kategorie einkaufen",
     "carouselAlt": "Gemütliche Kerzen",
-    "madeWithLove": "Because you deserve a moment for yourself",
-    "madeWithLoveText": "In a world that never slows down, this is your space to pause. To breathe. To create. To just be.",
+    "madeWithLove": "Weil du einen Moment für dich verdienst",
+    "madeWithLoveText": "In einer Welt, die nie langsamer wird, ist das dein Raum zum Innehalten. Zum Atmen. Zum Erschaffen. Einfach zum Sein.",
     "readOurStory": "Unsere Geschichte lesen",
     "customerSay": "Was unsere Kunden sagen",
     "joinCommunity": "Werden Sie Teil unserer Community!",
@@ -48,7 +48,7 @@
     "addToCart": "In den Warenkorb",
     "description": "Beschreibung",
     "freeShipping": "Kostenloser Versand",
-    "freeShippingText": "Bei Bestellungen über 50 €. Normalerweise Versand innerhalb von 1-2 Werktagen."
+    "freeShippingText": "Bei Bestellungen über 25 €. Normalerweise Versand innerhalb von 1-3 Werktagen."
   },
   "cart": {
     "yourCart": "Ihr Warenkorb",
@@ -74,12 +74,12 @@
     "removeFromFavorites": "Von der Wunschliste entfernen"
   },
   "footer": {
-    "shop": "Shop",
+    "shop": "Einkaufen",
     "home": "Startseite",
-    "allCollections": "All Categories",
+    "allCollections": "Alle Kategorien",
     "about": "Über uns",
     "ourStory": "Unsere Geschichte",
-    "faq": "FAQ",
+    "faq": "Häufige Fragen",
     "contact": "Kontakt",
     "customerCare": "Kundenservice",
     "returns": "Rückgabe",
@@ -89,12 +89,12 @@
     "email": "E-Mail"
   },
   "about": {
-    "title": "Über PookieCrafts",
-    "subtitle": "Where simple things feel a little more special",
+    "title": "Über Pookie Craft",
+    "subtitle": "Wo sich einfache Dinge ein bisschen besonderer anfühlen",
     "workspaceAlt": "PookieCrafts Arbeitsplatz",
-    "howItStarted": "Pookie Crafts is your little escape",
-    "howItStartedText1": "This isn't just about what you buy. It's about how it makes you feel. Pookie Crafts was created to bring a little calm into everyday life - through simple things like journaling, soft light, and quiet time for yourself.",
-    "howItStartedText2": "A cozy night. A calm mind. A moment just for you. Start your ritual and make it yours.",
+    "howItStarted": "Pookie Crafts ist dein kleiner Rückzugsort",
+    "howItStartedText1": "Es geht nicht nur darum, was du kaufst. Es geht darum, wie du dich dabei fühlst. Pookie Crafts wurde geschaffen, um ein wenig Ruhe in den Alltag zu bringen - durch einfache Dinge wie Journaling, sanftes Licht und stille Zeit für dich selbst.",
+    "howItStartedText2": "Ein gemütlicher Abend. Ein ruhiger Geist. Ein Moment nur für dich. Starte dein Ritual und mach es zu deinem eigenen.",
     "ourValues": "Unsere Werte",
     "handmadeQuality": "Handgefertigte Qualität",
     "handmadeQualityText": "Jedes Produkt wird von Hand in kleinen Chargen gefertigt, um höchste Qualität zu gewährleisten.",
@@ -110,14 +110,14 @@
   "faq": {
     "title": "Häufig gestellte Fragen",
     "subtitle": "Finden Sie Antworten auf häufige Fragen zu unseren Produkten",
-    "q1": "How long does the shipping take?",
-    "a1": "Orders are usually processed within 1-3 business days. Delivery time depends on your location, but we aim to get your package to you as quickly as possible.",
-    "q2": "Do you ship internationally?",
-    "a2": "Currently, we ship within the EU only and we offer free shipping for orders above 25€.",
-    "q3": "What are the candles made from?",
-    "a3": "All our candles are from 100% natural soy wax, premium fragrance oils and cotton wicks.",
-    "q4": "Do the candles include real crystals?",
-    "a4": "Yes -- each candle includes real crystals, thoughtfully placed to complement the mood and aesthetic of the piece.",
+    "q1": "Wie lange dauert der Versand?",
+    "a1": "Bestellungen werden in der Regel innerhalb von 1-3 Werktagen bearbeitet. Die Lieferzeit hängt von deinem Standort ab, aber wir tun alles, damit dein Paket so schnell wie möglich bei dir ankommt.",
+    "q2": "Liefert ihr international?",
+    "a2": "Aktuell liefern wir nur innerhalb der EU und bieten kostenlosen Versand für Bestellungen über 25 €.",
+    "q3": "Woraus bestehen die Kerzen?",
+    "a3": "Alle unsere Kerzen bestehen aus 100 % natürlichem Sojawachs, hochwertigen Duftölen und Baumwolldochten.",
+    "q4": "Enthalten die Kerzen echte Kristalle?",
+    "a4": "Ja -- jede Kerze enthält echte Kristalle, die sorgfältig platziert werden, um Stimmung und Ästhetik des Produkts zu ergänzen.",
     "stillQuestions": "Noch Fragen?",
     "stillQuestionsText": "Wir helfen Ihnen gerne! Kontaktieren Sie uns.",
     "contactUs": "Kontaktieren Sie uns"
@@ -135,7 +135,7 @@
     "sendMessage": "Nachricht senden",
     "messageSent": "Nachricht gesendet!",
     "messageSentText": "Vielen Dank für Ihre Nachricht. Wir melden uns bald bei Ihnen!",
-    "name": "Name",
+    "name": "Dein Name",
     "subject": "Betreff",
     "message": "Nachricht",
     "namePlaceholder": "Ihr Name",
@@ -148,11 +148,11 @@
     "sendErrorText": "Bitte versuchen Sie es in einem Moment erneut."
   },
   "collections": {
-    "title": "Categories",
-    "subtitle": "Everything you need for your moment",
-    "viewCollection": "View category",
-    "exploreCollection": "Explore our {name} category",
-    "noCollections": "No categories found.",
+    "title": "Kategorien",
+    "subtitle": "Alles, was du für deinen Moment brauchst",
+    "viewCollection": "Kategorie ansehen",
+    "exploreCollection": "Entdecke unsere Kategorie {name}",
+    "noCollections": "Keine Kategorien gefunden.",
     "productCount": "{count, plural, one {# Produkt} other {# Produkte}}",
     "showing": "Anzeige"
   },
@@ -161,11 +161,11 @@
     "description": "Handgefertigte Kerzen und Notizbücher mit Liebe gemacht"
   },
   "returnsPage": {
-    "title": "Rückgabe & Reklamation",
-    "subtitle": "Ein einfacher und fairer Prozess für deine Zufriedenheit.",
-    "p1": "Wenn du mit deiner Bestellung nicht zufrieden bist, kannst du sie innerhalb von 14 Tagen nach Lieferung zurückgeben. Das Produkt muss unbenutzt und im Originalzustand sein.",
-    "p2": "Bei Reklamationen kontaktiere uns bitte so schnell wie möglich und gib deine Bestellnummer sowie eine kurze Beschreibung des Problems an.",
-    "p3": "Nach der Freigabe senden wir dir die Rücksendeanweisungen. Die Versandkosten richten sich nach Art der Reklamation und den lokalen Vorschriften.",
+    "title": "Rückgabe und Rückerstattung",
+    "subtitle": "Du hast das Recht, deine Bestellung innerhalb von 14 Tagen nach Lieferung zurückzugeben.",
+    "p1": "Bevor du eine Rücksendung abschickst, musst du uns zuerst kontaktieren: per E-Mail oder über das Kontaktformular auf unserer Website. Gib im Betreff „Rückgabe + Bestellnummer“ an (z. B. Rückgabe #1234).",
+    "p2": "Rückgabebedingungen: Die Ware muss unbenutzt, im Originalzustand und in der Originalverpackung sein. Wir akzeptieren keine Rückgabe von benutzten Kerzen oder beschriebenen Journalen. Die Kosten für den Rückversand trägt der Kunde.",
+    "p3": "Wichtig: Lege die Bestellnummer in das Paket. Wenn die Bestellnummer nicht beigefügt ist, können wir die Sendung möglicherweise nicht identifizieren und keine Rückerstattung vornehmen. Nach Erhalt und Prüfung der zurückgesendeten Ware erstatten wir den Betrag mit derselben Zahlungsmethode, mit der die Bestellung bezahlt wurde. Wenn die Ware Gebrauchsspuren oder Beschädigungen aufweist, können wir die Rückerstattung entsprechend kürzen.",
     "contact": "Kontakt: "
   },
   "notFound": {

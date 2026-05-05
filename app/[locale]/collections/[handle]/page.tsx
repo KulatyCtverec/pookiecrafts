@@ -163,10 +163,6 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
             />
           ))}
         </div>
-        <div className="text-center text-muted-foreground">
-          {t("showing")} {products.length}{" "}
-          {t("productCount", { count: products.length })}
-        </div>
       </div>
     </>
   );

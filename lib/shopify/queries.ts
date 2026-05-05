@@ -398,3 +398,52 @@ export const HOMEPAGE_CAROUSEL_METAOBJECTS_QUERY = `
     }
   }
 `;
+
+/** Metaobject typ `about_photo` — vybere položku s key = "main" a vrátí pole `photo`. */
+export const ABOUT_PHOTO_METAOBJECT_QUERY = `
+  query aboutPhotoMetaobject {
+    metaobjects(type: "about_photo", first: 20, sortKey: "updated_at") {
+      nodes {
+        id
+        handle
+        fields {
+          key
+          value
+          reference {
+            ... on MediaImage {
+              image {
+                url
+                altText
+              }
+            }
+            ... on GenericFile {
+              url
+              alt
+            }
+          }
+        }
+        keyField: field(key: "key") {
+          value
+        }
+      }
+    }
+  }
+`;
+
+export const MEDIA_FILE_BY_ID_QUERY = `
+  query mediaFileById($id: ID!) {
+    node(id: $id) {
+      __typename
+      ... on MediaImage {
+        image {
+          url
+          altText
+        }
+      }
+      ... on GenericFile {
+        url
+        alt
+      }
+    }
+  }
+`;

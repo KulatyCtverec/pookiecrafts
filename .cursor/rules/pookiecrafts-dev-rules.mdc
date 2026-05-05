@@ -10,6 +10,7 @@ alwaysApply: true
 This project is **PookieCrafts**, a small handmade ecommerce store (candles & notebooks).
 
 Architecture:
+
 - **Next.js (App Router)** frontend
 - **Shopify** as the ONLY ecommerce backend
 - Hosted on **Vercel**
@@ -24,16 +25,19 @@ Goal: Maximum simplicity, minimal maintenance, fast launch.
 ## 1. Hard Architectural Rules (NON-NEGOTIABLE)
 
 ### 1.1 No Database
+
 - ❌ Do NOT introduce Prisma, Postgres, MySQL, SQLite, Redis, or any DB
 - ❌ Do NOT persist product, order, or cart data locally
 - ✅ All data lives in Shopify
 
 ### 1.2 No Custom Backend
+
 - ❌ No Express, NestJS, Fastify, Hono, or API server
 - ❌ No custom order or checkout logic
 - ✅ Only Next.js + Shopify Storefront API
 
 ### 1.3 Shopify Is Source of Truth
+
 Products, variants, prices, inventory, shipping, taxes, orders, checkout. Never duplicate this data.
 
 ---
@@ -79,6 +83,7 @@ Products, variants, prices, inventory, shipping, taxes, orders, checkout. Never 
 
 ## 7. UI & UX Rules
 
+- **Languages:** When changing a text on any screen, make sure to make the same change in every localization file.
 - **Simplicity:** Minimal pages and features; no overengineering.
 - **Design:** Use design tokens and reusable components; avoid one-off custom styles.
 

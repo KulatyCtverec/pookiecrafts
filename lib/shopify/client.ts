@@ -2,8 +2,10 @@ import { createStorefrontClient } from "@shopify/hydrogen-react";
 import {
   COLLECTIONS_QUERY,
   COLLECTION_BY_HANDLE_QUERY,
+  ABOUT_PHOTO_METAOBJECT_QUERY,
   HOMEPAGE_CAROUSEL_METAOBJECTS_QUERY,
   LOCALIZATION_QUERY,
+  MEDIA_FILE_BY_ID_QUERY,
   PRODUCT_BY_HANDLE_QUERY,
   PRODUCTS_BY_TYPE_QUERY,
   PRODUCTS_BY_TYPE_SUMMARY_QUERY,
@@ -185,8 +187,6 @@ function toShopifyLanguage(locale?: string): string {
     de: "DE",
     fr: "FR",
     es: "ES",
-    it: "IT",
-    pl: "PL",
   };
   return map[normalized] ?? "EN";
 }
@@ -365,6 +365,37 @@ interface CarouselMetaobjectNode {
   keyField: { value: string | null } | null;
 }
 
+export interface AboutPhotoImage {
+  url: string;
+  alt: string;
+}
+
+interface AboutPhotoMetaobjectNode {
+  id: string;
+  handle: string;
+  keyField: { value: string | null } | null;
+  fields?: {
+    key: string;
+    value?: string | null;
+    reference: CarouselMetaobjectReference | null;
+  }[];
+}
+
+type MediaFileNode =
+  | {
+      __typename: "MediaImage";
+      image?: { url: string; altText: string | null } | null;
+      url?: undefined;
+      alt?: undefined;
+    }
+  | {
+      __typename: "GenericFile";
+      url?: string | null;
+      alt?: string | null;
+      image?: undefined;
+    }
+  | null;
+
 function parseHomepageCarouselNode(
   node: CarouselMetaobjectNode
 ): HomepageCarouselImage | null {
@@ -413,6 +444,90 @@ export async function getHomepageCarouselImages(
       console.warn("[Shopify] getHomepageCarouselImages:", e);
     }
     return [];
+  }
+}
+
+/**
+ * Hlavní fotka pro About page z metaobjectu `about_photo` s `key = "main"`.
+ * Při chybě nebo chybějícím scope vrací null.
+ */
+export async function getAboutPhotoImage(
+  locale?: string
+): Promise<AboutPhotoImage | null> {
+  if (!isConfigured()) return null;
+  const resolveFileById = async (id: string): Promise<AboutPhotoImage | null> => {
+    const data = await shopifyFetch<{ node: MediaFileNode }>({
+      query: MEDIA_FILE_BY_ID_QUERY,
+      variables: { id },
+      revalidate: 300,
+    });
+    const node = data.node;
+    if (!node) return null;
+    if (node.__typename === "MediaImage" && node.image?.url) {
+      return {
+        url: node.image.url,
+        alt: node.image.altText?.trim() || "About",
+      };
+    }
+    if (node.__typename === "GenericFile" && node.url) {
+      return {
+        url: node.url,
+        alt: node.alt?.trim() || "About",
+      };
+    }
+    return null;
+  };
+
+  try {
+    const data = await shopifyFetch<{
+      metaobjects: { nodes: AboutPhotoMetaobjectNode[] };
+    }>({
+      query: ABOUT_PHOTO_METAOBJECT_QUERY,
+      revalidate: 300,
+    });
+    const nodes = data.metaobjects?.nodes ?? [];
+    const nodeByMainKey = nodes.find(
+      (item) => item.keyField?.value?.trim().toLowerCase() === "main"
+    );
+    const nodeWithImage = nodes.find((item) =>
+      (item.fields ?? []).some(
+        (field) =>
+          field.key !== "key" &&
+          (field.reference ||
+            (field.value?.startsWith("gid://shopify/MediaImage/") ?? false) ||
+            (field.value?.startsWith("gid://shopify/GenericFile/") ?? false))
+      )
+    );
+    const node = nodeByMainKey ?? nodeWithImage;
+    if (!node) return null;
+
+    const mediaField = (node.fields ?? []).find(
+      (field) =>
+        field.key !== "key" &&
+        (field.reference ||
+          (field.value?.startsWith("gid://shopify/MediaImage/") ?? false) ||
+          (field.value?.startsWith("gid://shopify/GenericFile/") ?? false))
+    );
+    if (!mediaField) return null;
+
+    const parsed = parseHomepageCarouselNode({
+      ...node,
+      photo: { reference: mediaField.reference ?? null },
+    } as CarouselMetaobjectNode);
+    if (parsed) {
+      return { url: parsed.url, alt: parsed.alt };
+    }
+
+    const fileId = mediaField.value?.trim() || null;
+    if (fileId?.startsWith("gid://")) {
+      return await resolveFileById(fileId);
+    }
+    return null;
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Shopify] getAboutPhotoImage:", e);
+    }
+    return null;
   }
 }
 

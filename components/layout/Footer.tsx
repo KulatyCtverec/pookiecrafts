@@ -2,7 +2,7 @@
 
 import { Link } from "@/i18n/navigation";
 import NextImage from "next/image";
-import { Facebook, Instagram, Mail } from "lucide-react";
+import { Instagram, Mail } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 export function Footer() {
@@ -38,13 +38,19 @@ export function Footer() {
                 <Mail className="w-5 h-5" />
               </a>
               <a
-                href="https://www.facebook.com/pookie.crafts.store"
+                href="https://www.tiktok.com/@pookie.crafts"
                 className="w-10 h-10 bg-muted hover:bg-accent transition-colors rounded-full flex items-center justify-center"
-                aria-label={t("facebook")}
+                aria-label="TikTok"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                <Facebook className="w-5 h-5" />
+                <svg
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                  className="w-5 h-5 fill-current"
+                >
+                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.26V2h-3.12v12.46a2.52 2.52 0 1 1-2.18-2.5V8.79a5.68 5.68 0 1 0 5.3 5.67V8.13a7.9 7.9 0 0 0 4.6 1.47V6.69z" />
+                </svg>
               </a>
             </div>
           </div>
@@ -58,14 +64,6 @@ export function Footer() {
                   className="text-muted-foreground hover:text-accent transition-colors"
                 >
                   {t("home")}
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/collections"
-                  className="text-muted-foreground hover:text-accent transition-colors"
-                >
-                  {t("allCollections")}
                 </Link>
               </li>
             </ul>

@@ -48,7 +48,7 @@
     "addToCart": "Add to Cart",
     "description": "Description",
     "freeShipping": "Free Shipping",
-    "freeShippingText": "On orders over $50. Usually ships within 1-2 business days."
+    "freeShippingText": "On orders over 25 €. Usually ships within 1-3 business days."
   },
   "cart": {
     "yourCart": "Your Cart",
@@ -89,7 +89,7 @@
     "email": "Email"
   },
   "about": {
-    "title": "About PookieCrafts",
+    "title": "About Pookie Craft",
     "subtitle": "Where simple things feel a little more special",
     "workspaceAlt": "PookieCrafts workspace",
     "howItStarted": "Pookie Crafts is your little escape",
@@ -162,10 +162,10 @@
   },
   "returnsPage": {
     "title": "Returns & refunds",
-    "subtitle": "A simple and fair process for your peace of mind.",
-    "p1": "If you're not satisfied with your order, you can return it within 14 days of delivery. The product must be unused and in its original condition.",
-    "p2": "For claims, please contact us as soon as possible and include your order number with a short description of the issue.",
-    "p3": "After approval, we'll send return instructions. Shipping costs depend on the claim type and local regulations.",
+    "subtitle": "You have the right to return your order within 14 days of delivery.",
+    "p1": "Before sending a return, you must contact us first by email or through the contact form on our website. In the subject line, write \"Return + order number\" (e.g. Return #1234).",
+    "p2": "Return conditions: items must be unused, in their original condition, and in the original packaging. We do not accept returns of used candles or written-in journals. Return shipping costs are paid by the customer.",
+    "p3": "Important: you must include your order number inside the package. If the order number is not included, we may not be able to identify the shipment and the refund will not be processed. After receiving and inspecting the returned goods, we will issue the refund using the same payment method used for the order. If the goods show signs of use or damage, we may reduce the refund accordingly.",
     "contact": "Contact us at"
   },
   "notFound": {

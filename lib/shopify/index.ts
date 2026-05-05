@@ -9,9 +9,10 @@ export {
   getCollectionHandles,
   getProductHandles,
   getHomepageCarouselImages,
+  getAboutPhotoImage,
 } from "./client";
 export { getProductsByTypeSummary } from "./client";
-export type { ShopifyProductForColor } from "./client";
+export type { ShopifyProductForColor, AboutPhotoImage } from "./client";
 export {
   createCart,
   getCart,

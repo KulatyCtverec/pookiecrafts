@@ -88,7 +88,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
         if (idx >= 0) {
           next = prev.filter((x) => x !== h);
         } else {
-          next = [...prev, h];
+          next = [h, ...prev];
         }
         writeHandlesToStorage(next);
         return next;

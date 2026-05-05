@@ -23,8 +23,6 @@ export async function generateMetadata({
         de: "/de",
         fr: "/fr",
         es: "/es",
-        it: "/it",
-        pl: "/pl",
         cs: "/cs",
       },
     },

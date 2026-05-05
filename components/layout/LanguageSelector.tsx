@@ -11,8 +11,6 @@ const LOCALE_TO_FLAG: Record<string, string> = {
   de: "de",
   fr: "fr",
   es: "es",
-  it: "it",
-  pl: "pl",
   cs: "cz",
 };
 

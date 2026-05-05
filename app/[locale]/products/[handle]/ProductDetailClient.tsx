@@ -6,7 +6,8 @@ import { Button } from "@/components/design-system/Button";
 import { QuantitySelector } from "@/components/design-system/QuantitySelector";
 import { ImageWithFallback } from "@/components/design-system/ImageWithFallback";
 import { useCart, type OptimisticCartLineSnapshot } from "@/components/cart/CartProvider";
-import { Truck } from "lucide-react";
+import { useFavorites } from "@/components/favorites/FavoritesProvider";
+import { ChevronLeft, ChevronRight, Heart, Truck } from "lucide-react";
 import { BackButton } from "@/components/design-system/BackButton";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "next-intl";
@@ -66,8 +67,9 @@ function getProductColorInfo(p: ShopifyProductForColor): { handle: string; hex: 
 
 export function ProductDetailClient({ product, relatedProductsByType = [], locale = "en" }: ProductDetailClientProps) {
   const t = useTranslations("product");
-  const tCommon = useTranslations("common");
+  const tWishlist = useTranslations("wishlist");
   const { addItem, cartError, isPendingAdd } = useCart();
+  const { isFavorite, toggle } = useFavorites();
 
   const [selectedVariantId, setSelectedVariantId] = useState(
     product.variants.nodes[0]?.id ?? ""
@@ -153,6 +155,43 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
   const mainDisplayImage = hasVariantImages
     ? (selectedVariant?.image ?? product.featuredImage ?? fallbackImage)
     : (images[selectedImage] ?? product.featuredImage ?? fallbackImage);
+  const favorite = isFavorite(product.handle);
+  const canNavigateImages = hasVariantImages
+    ? variantImagesForThumbnails.length > 1
+    : images.length > 1;
+
+  const goToPreviousImage = () => {
+    if (hasVariantImages) {
+      if (variantImagesForThumbnails.length <= 1) return;
+      const currentIndex = Math.max(
+        0,
+        variantImagesForThumbnails.findIndex(({ variantId }) => variantId === selectedVariantId)
+      );
+      const prevIndex =
+        (currentIndex - 1 + variantImagesForThumbnails.length) % variantImagesForThumbnails.length;
+      setSelectedVariantId(variantImagesForThumbnails[prevIndex].variantId);
+      return;
+    }
+
+    if (images.length <= 1) return;
+    setSelectedImage((prev) => (prev - 1 + images.length) % images.length);
+  };
+
+  const goToNextImage = () => {
+    if (hasVariantImages) {
+      if (variantImagesForThumbnails.length <= 1) return;
+      const currentIndex = Math.max(
+        0,
+        variantImagesForThumbnails.findIndex(({ variantId }) => variantId === selectedVariantId)
+      );
+      const nextIndex = (currentIndex + 1) % variantImagesForThumbnails.length;
+      setSelectedVariantId(variantImagesForThumbnails[nextIndex].variantId);
+      return;
+    }
+
+    if (images.length <= 1) return;
+    setSelectedImage((prev) => (prev + 1) % images.length);
+  };
 
   const handleAddToCart = async () => {
     if (!selectedVariant?.id || maxQuantity <= 0 || quantity <= 0) return;
@@ -185,16 +224,49 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
-      <BackButton />
-
       <div className="grid md:grid-cols-2 gap-12 mb-16">
         <div className="space-y-4">
-          <div className="rounded-3xl overflow-hidden bg-muted aspect-square">
+          <div className="rounded-3xl overflow-hidden bg-muted aspect-square relative">
             <ImageWithFallback
               src={mainDisplayImage?.url || ""}
               alt={mainDisplayImage?.altText || product.title}
               className="w-full h-full object-cover"
             />
+            <button
+              type="button"
+              onClick={() => toggle(product.handle)}
+              className="absolute top-3 right-3 z-10 p-2 rounded-full bg-background/90 shadow-sm border border-border/60 hover:bg-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              aria-pressed={favorite}
+              aria-label={favorite ? tWishlist("removeFromFavorites") : tWishlist("addToFavorites")}
+            >
+              <Heart
+                className={cn(
+                  "w-5 h-5 transition-colors",
+                  favorite ? "fill-pink-500 text-pink-500" : "text-muted-foreground"
+                )}
+                strokeWidth={2}
+              />
+            </button>
+            {canNavigateImages && (
+              <>
+                <button
+                  type="button"
+                  onClick={goToPreviousImage}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/40 hover:bg-white/60 border border-white/20 text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-5 h-5" />
+                </button>
+                <button
+                  type="button"
+                  onClick={goToNextImage}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 z-10 p-2 rounded-full bg-white/40 hover:bg-white/60 border border-white/20 text-foreground shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-5 h-5" />
+                </button>
+              </>
+            )}
           </div>
           {variantImagesForThumbnails.length > 0 ? (
             <div className="flex gap-3 flex-wrap">
@@ -244,11 +316,14 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
         </div>
 
         <div className="space-y-6">
-          <div>
-            <h1 className="text-3xl md:text-4xl mb-1">{product.title}</h1>
-            <p className="text-3xl font-semibold text-accent">
-              {formatPrice(price.amount, currency, locale)}
-            </p>
+          <div className="flex items-start justify-between gap-4">
+            <div>
+              <h1 className="text-3xl md:text-4xl mb-1">{product.title}</h1>
+              <p className="text-3xl font-semibold text-accent">
+                {formatPrice(price.amount, currency, locale)}
+              </p>
+            </div>
+            <BackButton className="mb-0 shrink-0" />
           </div>
 
           {((useRelatedProducts && relatedWithColors.length > 0) ||
@@ -338,37 +413,34 @@ export function ProductDetailClient({ product, relatedProductsByType = [], local
               )}
             </div>
           )}
-          <div className="space-y-4">
-            <div>
-              <label className="block mb-3 text-sm">{t("quantity")}</label>
+          <div className="space-y-3">
+            <label className="block text-sm">{t("quantity")}</label>
+
+            <div className="flex flex-wrap items-center gap-3">
               <QuantitySelector
                 value={quantity}
                 onChange={setQuantity}
                 min={maxQuantity <= 0 ? 0 : 1}
                 max={Math.max(maxQuantity, 0)}
               />
+              <Button
+                size="lg"
+                className="min-w-[220px] flex-1"
+                onClick={handleAddToCart}
+                disabled={
+                  !selectedVariant?.availableForSale ||
+                  isPendingAdd ||
+                  maxQuantity <= 0 ||
+                  quantity <= 0
+                }
+              >
+                {addToCartLabel}
+              </Button>
             </div>
 
-            <div className="flex flex-col gap-3">
-              {cartError && (
-                <p className="text-sm text-destructive">{cartError}</p>
-              )}
-              <div className="flex gap-3">
-                <Button
-                  size="lg"
-                  className="flex-1"
-                  onClick={handleAddToCart}
-                  disabled={
-                    !selectedVariant?.availableForSale ||
-                    isPendingAdd ||
-                    maxQuantity <= 0 ||
-                    quantity <= 0
-                  }
-                >
-                  {addToCartLabel}
-                </Button>
-              </div>
-            </div>
+            {cartError && (
+              <p className="text-sm text-destructive">{cartError}</p>
+            )}
           </div>
 
 

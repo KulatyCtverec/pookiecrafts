@@ -35,7 +35,7 @@ export function HeaderClient({ collectionLinks }: { collectionLinks: NavCollecti
 
           <Link
             href="/"
-            className="z-5 flex min-w-0 shrink items-center justify-center md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:shrink-0 max-md:max-w-[min(156px,42vw)]"
+            className="z-50 flex min-w-0 shrink items-center justify-center md:absolute md:top-1/2 md:left-1/2 md:-translate-x-1/2 md:-translate-y-1/2 md:shrink-0 max-md:max-w-[min(156px,42vw)]"
             aria-label={t("home")}
           >
             <NextImage
