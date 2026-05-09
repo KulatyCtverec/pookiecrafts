@@ -1,7 +1,7 @@
 "use client";
 
 import { Link } from "@/i18n/navigation";
-import { Menu, X } from "lucide-react";
+import { CircleUserRound, Menu, X } from "lucide-react";
 import { CartIcon } from "@/components/cart/CartIcon";
 import { WishlistNavLink } from "@/components/favorites/WishlistNavLink";
 import { LanguageSelector } from "@/components/layout/LanguageSelector";
@@ -12,9 +12,18 @@ import { useTranslations } from "next-intl";
 
 export type NavCollectionLink = { handle: string; title: string };
 
-export function HeaderClient({ collectionLinks }: { collectionLinks: NavCollectionLink[] }) {
+export function HeaderClient({
+  collectionLinks,
+  locale,
+}: {
+  collectionLinks: NavCollectionLink[];
+  locale: string;
+}) {
   const t = useTranslations("nav");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const loginUrl = `/api/auth/shopify/login?locale=${encodeURIComponent(
+    locale
+  )}&returnTo=${encodeURIComponent(`/${locale}/account`)}`;
 
   return (
     <header className="sticky top-0 z-30 w-full min-w-0 bg-background/80 backdrop-blur-md border-b border-border">
@@ -50,6 +59,13 @@ export function HeaderClient({ collectionLinks }: { collectionLinks: NavCollecti
 
           <div className="relative z-20 flex shrink-0 max-md:flex-none min-w-0 flex-1 items-center justify-end gap-0.5 sm:gap-2 pl-1 sm:pl-2 md:pl-4">
             <LanguageSelector />
+            <a
+              href={loginUrl}
+              className="inline-flex items-center justify-center rounded-full p-2 hover:bg-muted transition-colors"
+              aria-label={t("signIn")}
+            >
+              <CircleUserRound className="h-5 w-5" />
+            </a>
             <WishlistNavLink />
             <CartIcon />
             <button
@@ -85,6 +101,13 @@ export function HeaderClient({ collectionLinks }: { collectionLinks: NavCollecti
                 {c.title}
               </Link>
             ))}
+            <a
+              href={loginUrl}
+              className="text-foreground hover:text-accent transition-colors font-medium py-2"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              {t("signIn")}
+            </a>
 
           </div>
         </div>

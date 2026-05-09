@@ -17,7 +17,8 @@
     "toggleMenu": "Menü umschalten",
     "openCart": "Warenkorb öffnen",
     "openWishlist": "Wunschliste",
-    "selectLanguage": "Sprache wählen"
+    "selectLanguage": "Sprache wählen",
+    "signIn": "Sign in"
   },
   "home": {
     "heroTitle": "Schaffe dir deinen gemütlichen Moment",
@@ -167,6 +168,28 @@
     "p2": "Rückgabebedingungen: Die Ware muss unbenutzt, im Originalzustand und in der Originalverpackung sein. Wir akzeptieren keine Rückgabe von benutzten Kerzen oder beschriebenen Journalen. Die Kosten für den Rückversand trägt der Kunde.",
     "p3": "Wichtig: Lege die Bestellnummer in das Paket. Wenn die Bestellnummer nicht beigefügt ist, können wir die Sendung möglicherweise nicht identifizieren und keine Rückerstattung vornehmen. Nach Erhalt und Prüfung der zurückgesendeten Ware erstatten wir den Betrag mit derselben Zahlungsmethode, mit der die Bestellung bezahlt wurde. Wenn die Ware Gebrauchsspuren oder Beschädigungen aufweist, können wir die Rückerstattung entsprechend kürzen.",
     "contact": "Kontakt: "
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Manage your profile and order history.",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "loading": "Loading account…",
+    "loadError": "We could not load your account right now.",
+    "profileHeading": "Profile",
+    "ordersHeading": "Orders",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "saveProfile": "Save profile",
+    "saving": "Saving…",
+    "saved": "Profile updated.",
+    "noOrders": "No orders yet.",
+    "orderNumber": "Order",
+    "orderDate": "Date",
+    "orderTotal": "Total",
+    "nextPage": "Load more orders"
   },
   "notFound": {
     "title": "Seite nicht gefunden",

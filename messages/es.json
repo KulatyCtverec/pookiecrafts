@@ -17,7 +17,8 @@
     "toggleMenu": "Abrir menú",
     "openCart": "Abrir carrito",
     "openWishlist": "Lista de deseos",
-    "selectLanguage": "Seleccionar idioma"
+    "selectLanguage": "Seleccionar idioma",
+    "signIn": "Sign in"
   },
   "home": {
     "heroTitle": "Crea tu momento acogedor",
@@ -167,6 +168,28 @@
     "p2": "Condiciones de devolución: los productos deben estar sin usar, en su estado original y en su embalaje original. No aceptamos devoluciones de velas usadas ni de diarios ya escritos. Los gastos de envío de la devolución corren por cuenta del cliente.",
     "p3": "Importante: debes incluir el número de pedido dentro del paquete. Si no se incluye, es posible que no podamos identificar el envío y no se procesará el reembolso. Tras recibir y revisar los productos devueltos, realizaremos el reembolso con el mismo método de pago utilizado en el pedido. Si los productos muestran señales de uso o daños, podremos reducir el reembolso de forma proporcional.",
     "contact": "Contáctanos en"
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Manage your profile and order history.",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "loading": "Loading account…",
+    "loadError": "We could not load your account right now.",
+    "profileHeading": "Profile",
+    "ordersHeading": "Orders",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "saveProfile": "Save profile",
+    "saving": "Saving…",
+    "saved": "Profile updated.",
+    "noOrders": "No orders yet.",
+    "orderNumber": "Order",
+    "orderDate": "Date",
+    "orderTotal": "Total",
+    "nextPage": "Load more orders"
   },
   "notFound": {
     "title": "Página no encontrada",

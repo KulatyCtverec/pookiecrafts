@@ -17,7 +17,8 @@
     "toggleMenu": "Ouvrir le menu",
     "openCart": "Ouvrir le panier",
     "openWishlist": "Liste de souhaits",
-    "selectLanguage": "Choisir la langue"
+    "selectLanguage": "Choisir la langue",
+    "signIn": "Sign in"
   },
   "home": {
     "heroTitle": "Créez votre moment cocooning",
@@ -167,6 +168,28 @@
     "p2": "Conditions de retour : les articles doivent être non utilisés, dans leur état d'origine et dans leur emballage d'origine. Nous n'acceptons pas les retours de bougies utilisées ni de journaux déjà remplis. Les frais de retour sont à la charge du client.",
     "p3": "Important : vous devez joindre le numéro de commande dans le colis. Si le numéro de commande n'est pas joint, nous pourrions ne pas être en mesure d'identifier l'envoi et le remboursement ne sera pas effectué. Après réception et vérification des articles retournés, nous effectuerons le remboursement via le même mode de paiement que celui utilisé pour la commande. Si les articles présentent des signes d'utilisation ou de dommage, nous pouvons réduire le remboursement de manière proportionnée.",
     "contact": "Contactez-nous à"
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Manage your profile and order history.",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "loading": "Loading account…",
+    "loadError": "We could not load your account right now.",
+    "profileHeading": "Profile",
+    "ordersHeading": "Orders",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "saveProfile": "Save profile",
+    "saving": "Saving…",
+    "saved": "Profile updated.",
+    "noOrders": "No orders yet.",
+    "orderNumber": "Order",
+    "orderDate": "Date",
+    "orderTotal": "Total",
+    "nextPage": "Load more orders"
   },
   "notFound": {
     "title": "Page non trouvée",

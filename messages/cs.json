@@ -17,7 +17,8 @@
     "toggleMenu": "Otevřít menu",
     "openCart": "Otevřít košík",
     "openWishlist": "Seznam přání",
-    "selectLanguage": "Vybrat jazyk"
+    "selectLanguage": "Vybrat jazyk",
+    "signIn": "Sign in"
   },
   "home": {
     "heroTitle": "Dopřej si chvíli klidu",
@@ -167,6 +168,28 @@
     "p2": "Podmínky vrácení: zboží musí být nepoužité, v původním stavu a obalu. Nepřijímáme vrácení použitých svíček ani popsaných deníků. Náklady na zpětnou dopravu hradí zákazník.",
     "p3": "Důležité: do balíku musíte přiložit číslo objednávky. Pokud číslo objednávky nebude přiloženo, nemusíme být schopni zásilku identifikovat a refundace nebude provedena. Po obdržení a kontrole vráceného zboží provedeme refundaci stejnou platební metodou, jakou byla objednávka uhrazena. Pokud zboží ponese známky použití nebo poškození, můžeme refundaci přiměřeně snížit.",
     "contact": "Kontaktujte nás na"
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Manage your profile and order history.",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "loading": "Loading account…",
+    "loadError": "We could not load your account right now.",
+    "profileHeading": "Profile",
+    "ordersHeading": "Orders",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "saveProfile": "Save profile",
+    "saving": "Saving…",
+    "saved": "Profile updated.",
+    "noOrders": "No orders yet.",
+    "orderNumber": "Order",
+    "orderDate": "Date",
+    "orderTotal": "Total",
+    "nextPage": "Load more orders"
   },
   "notFound": {
     "title": "Stránka nenalezena",

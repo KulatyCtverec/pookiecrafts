@@ -156,7 +156,25 @@ export async function shopifyFetch<T>({
   const fetchUrl = lang ? `${url}?lang=${encodeURIComponent(lang)}` : url;
 
   const res = await fetch(fetchUrl, fetchOptions);
-  const json = await res.json();
+  const contentType = res.headers.get("content-type") ?? "";
+  const isJson = contentType.toLowerCase().includes("application/json");
+  const bodyText = await res.text();
+  const bodyPreview = bodyText.slice(0, 250);
+
+  if (!isJson) {
+    throw new Error(
+      `Shopify API returned non-JSON response (${res.status} ${res.statusText}) from ${fetchUrl}. Content-Type: ${contentType || "unknown"}. Body preview: ${JSON.stringify(bodyPreview)}`
+    );
+  }
+
+  let json: { errors?: unknown[]; data?: T };
+  try {
+    json = JSON.parse(bodyText) as { errors?: unknown[]; data?: T };
+  } catch {
+    throw new Error(
+      `Shopify API returned invalid JSON (${res.status} ${res.statusText}) from ${fetchUrl}. Body preview: ${JSON.stringify(bodyPreview)}`
+    );
+  }
 
   if (!res.ok) {
     const hint =
@@ -227,14 +245,21 @@ export async function getCollections(
 ): Promise<ShopifyCollection[]> {
   if (!isConfigured()) return [];
   const language = toShopifyLanguage(locale);
-  const data = await shopifyFetch<{
-    collections: { nodes: ShopifyCollection[] };
-  }>({
-    query: COLLECTIONS_QUERY,
-    variables: { language },
-    revalidate: 300,
-  });
-  return data.collections.nodes;
+  try {
+    const data = await shopifyFetch<{
+      collections: { nodes: ShopifyCollection[] };
+    }>({
+      query: COLLECTIONS_QUERY,
+      variables: { language },
+      revalidate: 300,
+    });
+    return data.collections.nodes;
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Shopify] getCollections:", e);
+    }
+    return [];
+  }
 }
 
 export async function getCollectionByHandle(
@@ -243,14 +268,21 @@ export async function getCollectionByHandle(
 ): Promise<ShopifyCollectionWithProducts | null> {
   if (!isConfigured()) return null;
   const language = toShopifyLanguage(locale);
-  const data = await shopifyFetch<{
-    collection: ShopifyCollectionWithProducts | null;
-  }>({
-    query: COLLECTION_BY_HANDLE_QUERY,
-    variables: { handle, language },
-    revalidate: 300,
-  });
-  return data.collection;
+  try {
+    const data = await shopifyFetch<{
+      collection: ShopifyCollectionWithProducts | null;
+    }>({
+      query: COLLECTION_BY_HANDLE_QUERY,
+      variables: { handle, language },
+      revalidate: 300,
+    });
+    return data.collection;
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Shopify] getCollectionByHandle:", e);
+    }
+    return null;
+  }
 }
 
 export async function getProductByHandle(
@@ -259,14 +291,21 @@ export async function getProductByHandle(
 ): Promise<ShopifyProduct | null> {
   if (!isConfigured()) return null;
   const language = toShopifyLanguage(locale);
-  const data = await shopifyFetch<{
-    product: ShopifyProduct | null;
-  }>({
-    query: PRODUCT_BY_HANDLE_QUERY,
-    variables: { handle, language },
-    revalidate: 300,
-  });
-  return data.product;
+  try {
+    const data = await shopifyFetch<{
+      product: ShopifyProduct | null;
+    }>({
+      query: PRODUCT_BY_HANDLE_QUERY,
+      variables: { handle, language },
+      revalidate: 300,
+    });
+    return data.product;
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Shopify] getProductByHandle:", e);
+    }
+    return null;
+  }
 }
 
 const WISHLIST_HANDLE_MAX = 50;
@@ -320,14 +359,21 @@ export async function getProductsByType(
   if (!isConfigured() || !productType.trim()) return [];
   const query = `product_type:"${productType.replace(/"/g, '\\"')}"`;
   const language = toShopifyLanguage(locale);
-  const data = await shopifyFetch<{
-    products: { nodes: ShopifyProductForColor[] };
-  }>({
-    query: PRODUCTS_BY_TYPE_QUERY,
-    variables: { query, language },
-    revalidate: 300,
-  });
-  return data.products?.nodes ?? [];
+  try {
+    const data = await shopifyFetch<{
+      products: { nodes: ShopifyProductForColor[] };
+    }>({
+      query: PRODUCTS_BY_TYPE_QUERY,
+      variables: { query, language },
+      revalidate: 300,
+    });
+    return data.products?.nodes ?? [];
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Shopify] getProductsByType:", e);
+    }
+    return [];
+  }
 }
 
 export async function getProductsByTypeSummary(
@@ -337,14 +383,21 @@ export async function getProductsByTypeSummary(
   if (!isConfigured() || !productType.trim()) return [];
   const query = `product_type:"${productType.replace(/"/g, '\\"')}"`;
   const language = toShopifyLanguage(locale);
-  const data = await shopifyFetch<{
-    products: { nodes: ShopifyProductSummary[] };
-  }>({
-    query: PRODUCTS_BY_TYPE_SUMMARY_QUERY,
-    variables: { query, language },
-    revalidate: 300,
-  });
-  return data.products?.nodes ?? [];
+  try {
+    const data = await shopifyFetch<{
+      products: { nodes: ShopifyProductSummary[] };
+    }>({
+      query: PRODUCTS_BY_TYPE_SUMMARY_QUERY,
+      variables: { query, language },
+      revalidate: 300,
+    });
+    return data.products?.nodes ?? [];
+  } catch (e) {
+    if (process.env.NODE_ENV === "development") {
+      console.warn("[Shopify] getProductsByTypeSummary:", e);
+    }
+    return [];
+  }
 }
 
 type CarouselMetaobjectReference =
@@ -547,14 +600,22 @@ async function paginateHandles(
 
   while (hasNext && guard < 20) {
     guard += 1;
-    const data: {
+    let data: {
       collections?: { nodes: ShopifyHandleNode[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } };
       products?: { nodes: ShopifyHandleNode[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } };
-    } = await shopifyFetch({
-      query,
-      variables: { cursor, language },
-      revalidate: 3600,
-    });
+    };
+    try {
+      data = await shopifyFetch({
+        query,
+        variables: { cursor, language },
+        revalidate: 3600,
+      });
+    } catch (e) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn("[Shopify] paginateHandles:", e);
+      }
+      break;
+    }
 
     const payload:
       | { nodes: ShopifyHandleNode[]; pageInfo: { hasNextPage: boolean; endCursor: string | null } }

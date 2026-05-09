@@ -17,7 +17,8 @@
     "toggleMenu": "Toggle menu",
     "openCart": "Open cart",
     "openWishlist": "Wishlist",
-    "selectLanguage": "Select language"
+    "selectLanguage": "Select language",
+    "signIn": "Sign in"
   },
   "home": {
     "heroTitle": "Create your cozy moment",
@@ -167,6 +168,28 @@
     "p2": "Return conditions: items must be unused, in their original condition, and in the original packaging. We do not accept returns of used candles or written-in journals. Return shipping costs are paid by the customer.",
     "p3": "Important: you must include your order number inside the package. If the order number is not included, we may not be able to identify the shipment and the refund will not be processed. After receiving and inspecting the returned goods, we will issue the refund using the same payment method used for the order. If the goods show signs of use or damage, we may reduce the refund accordingly.",
     "contact": "Contact us at"
+  },
+  "account": {
+    "title": "My account",
+    "subtitle": "Manage your profile and order history.",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "loading": "Loading account…",
+    "loadError": "We could not load your account right now.",
+    "profileHeading": "Profile",
+    "ordersHeading": "Orders",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "phone": "Phone",
+    "saveProfile": "Save profile",
+    "saving": "Saving…",
+    "saved": "Profile updated.",
+    "noOrders": "No orders yet.",
+    "orderNumber": "Order",
+    "orderDate": "Date",
+    "orderTotal": "Total",
+    "nextPage": "Load more orders"
   },
   "notFound": {
     "title": "Page Not Found",

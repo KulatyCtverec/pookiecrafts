@@ -9,6 +9,26 @@ Copy `.env.local.example` to `.env.local` and set:
 - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN` – **Storefront API** (public) token from Headless sales channel (not Admin API)
 - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION` – e.g. `2025-04` ([Storefront API versions](https://shopify.dev/docs/api/storefront/latest))
 
+## Customer Profiles (Customer Account API)
+
+For headless customer profiles (orders, personal info), use Shopify Customer Account API OAuth with **PKCE** (public web client — no `SHOPIFY_CLIENT_SECRET`):
+
+- `SHOPIFY_CLIENT_ID`
+- `SHOPIFY_CUSTOMER_SESSION_SECRET` — required; encrypts the customer session cookie (use a long random string).
+- `SHOPIFY_AUTH_REDIRECT_URI` — must be listed under **Callback URIs** in Shopify (exact match with your deployed HTTPS URL).
+- `SHOPIFY_AUTH_LOGOUT_REDIRECT_URI` — must be listed under **Logout URIs**.
+- `SHOPIFY_AUTH_ORIGIN` *(optional)* — same as your app origin; must appear under **JavaScript origins** (hostname only, e.g. `pookiecrafts.cz`). Defaults to the origin of `SHOPIFY_AUTH_REDIRECT_URI`.
+- `SHOPIFY_CUSTOMER_AUTH_DOMAIN` *(optional fallback)* — e.g. `account.pookiecrafts.cz` if discovery on the storefront domain fails.
+
+In Shopify Admin, fill **Callback URIs**, **JavaScript origins**, and **Logout URIs** — leaving them empty breaks OAuth.
+
+Discovery endpoints must resolve (often via `SHOPIFY_CUSTOMER_AUTH_DOMAIN`):
+
+- `https://<domain>/.well-known/openid-configuration`
+- `https://<domain>/.well-known/customer-account-api`
+
+Do not hardcode customer auth/token/graphql endpoints. Discover and cache them from the URLs above.
+
 ## Getting Started
 
 First, run the development server:
