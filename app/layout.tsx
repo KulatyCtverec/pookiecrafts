@@ -1,14 +1,8 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { DM_Serif_Display, Nunito } from "next/font/google";
+import { Nunito } from "next/font/google";
 import "./globals.css";
 import { getBaseUrl } from "@/lib/seo";
-
-const dmSerif = DM_Serif_Display({
-  variable: "--font-dm-serif",
-  subsets: ["latin"],
-  weight: "400",
-});
 
 const nunito = Nunito({
   variable: "--font-nunito",
@@ -50,7 +44,7 @@ export default async function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className={`${dmSerif.variable} ${nunito.variable} font-sans antialiased`}>
+      <body className={`${nunito.variable} font-sans antialiased`}>
         {children}
       </body>
     </html>

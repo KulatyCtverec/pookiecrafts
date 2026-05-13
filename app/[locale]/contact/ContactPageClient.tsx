@@ -100,10 +100,10 @@ export function ContactPageClient() {
                 <div>
                   <h3 className="font-semibold mb-1">{t("email")}</h3>
                   <a
-                    href="mailto:pookie.crafts909@gmail.com"
+                    href="mailto:info.pookiecrafts@gmail.com"
                     className="text-muted-foreground hover:text-accent transition-colors"
                   >
-                    pookie.crafts909@gmail.com
+                    info.pookiecrafts@gmail.com
                   </a>
                 </div>
               </div>

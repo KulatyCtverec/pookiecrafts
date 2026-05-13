@@ -2,7 +2,6 @@
 
 import { Link } from "@/i18n/navigation";
 import { Heart } from "lucide-react";
-import { useTranslations } from "next-intl";
 import { useFavorites } from "@/components/favorites/FavoritesProvider";
 import { cn } from "@/lib/utils";
 import { ImageWithFallback } from "./ImageWithFallback";
@@ -26,15 +25,27 @@ interface ProductCardProps {
 const PLACEHOLDER_IMAGE =
   "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400' viewBox='0 0 400 400'%3E%3Crect fill='%23f3f4f6' width='400' height='400'/%3E%3Ctext fill='%239ca3af' font-family='sans-serif' font-size='24' x='50%25' y='50%25' text-anchor='middle' dy='.3em'%3ENo image%3C/text%3E%3C/svg%3E";
 
+const FAVORITE_ARIA_LABELS: Record<
+  string,
+  { add: string; remove: string }
+> = {
+  en: { add: "Add to favorites", remove: "Remove from favorites" },
+  de: { add: "Zu Favoriten hinzufügen", remove: "Aus Favoriten entfernen" },
+  fr: { add: "Ajouter aux favoris", remove: "Retirer des favoris" },
+  es: { add: "Agregar a favoritos", remove: "Quitar de favoritos" },
+  cs: { add: "Přidat do oblíbených", remove: "Odebrat z oblíbených" },
+};
+
 export function ProductCard({
   product,
   locale = "en",
   showFavorite = true,
 }: ProductCardProps) {
-  const t = useTranslations("wishlist");
   const { isFavorite, toggle } = useFavorites();
   const normalizedLocale =
     typeof locale === "string" && locale.trim().length > 0 ? locale : "en";
+  const favoriteLabels =
+    FAVORITE_ARIA_LABELS[normalizedLocale] ?? FAVORITE_ARIA_LABELS.en;
   const formatCurrency = (targetLocale: string) =>
     new Intl.NumberFormat(targetLocale, {
       style: "currency",
@@ -78,7 +89,7 @@ export function ProductCard({
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
             )}
             aria-pressed={favorite}
-            aria-label={favorite ? t("removeFromFavorites") : t("addToFavorites")}
+            aria-label={favorite ? favoriteLabels.remove : favoriteLabels.add}
           >
             <Heart
               className={cn(

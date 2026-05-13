@@ -54,10 +54,10 @@ export default async function ReturnsPage() {
         <p>
           {t("contact")}{" "}
           <a
-            href="mailto:pookie.crafts909@gmail.com"
+            href="mailto:info.pookiecrafts@gmail.com"
             className="text-accent hover:text-accent/80"
           >
-            pookie.crafts909@gmail.com
+            info.pookiecrafts@gmail.com
           </a>
           .
         </p>

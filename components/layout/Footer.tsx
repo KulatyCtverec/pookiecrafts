@@ -31,7 +31,7 @@ export function Footer() {
                 <Instagram className="w-5 h-5" />
               </a>
               <a
-                href="mailto:pookie.crafts909@gmail.com"
+                href="mailto:info.pookiecrafts@gmail.com"
                 className="w-10 h-10 bg-muted hover:bg-accent transition-colors rounded-full flex items-center justify-center"
                 aria-label={t("email")}
               >

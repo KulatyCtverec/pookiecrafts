@@ -18,11 +18,11 @@ For headless customer profiles (orders, personal info), use Shopify Customer Acc
 - `SHOPIFY_AUTH_REDIRECT_URI` — must be listed under **Callback URIs** in Shopify (exact match with your deployed HTTPS URL).
 - `SHOPIFY_AUTH_LOGOUT_REDIRECT_URI` — must be listed under **Logout URIs**.
 - `SHOPIFY_AUTH_ORIGIN` *(optional)* — same as your app origin; must appear under **JavaScript origins** (hostname only, e.g. `pookiecrafts.cz`). Defaults to the origin of `SHOPIFY_AUTH_REDIRECT_URI`.
-- `SHOPIFY_CUSTOMER_AUTH_DOMAIN` *(optional fallback)* — e.g. `account.pookiecrafts.cz` if discovery on the storefront domain fails.
+- `SHOPIFY_CUSTOMER_AUTH_DOMAIN` — **set this in production** when your storefront URL is a custom domain (e.g. `pookiecrafts.cz`) that does **not** serve OIDC discovery; use the Customer Accounts host from Shopify (often `account.<your-domain>`), e.g. `account.pookiecrafts.cz`. Discovery tries this host **first**, then `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN`.
 
 In Shopify Admin, fill **Callback URIs**, **JavaScript origins**, and **Logout URIs** — leaving them empty breaks OAuth.
 
-Discovery endpoints must resolve (often via `SHOPIFY_CUSTOMER_AUTH_DOMAIN`):
+Discovery endpoints must resolve:
 
 - `https://<domain>/.well-known/openid-configuration`
 - `https://<domain>/.well-known/customer-account-api`
@@ -66,9 +66,10 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 1. Vercel → tvůj projekt → **Settings** → **Environment Variables**.
 2. Přidej (pro **Production**, případně i Preview):
-   - `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` = tvoje doména (např. `obchod.myshopify.com`)
+   - `NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN` = tvoje doména (např. `obchod.myshopify.com` nebo vlastní storefront doména)
    - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_TOKEN` = Storefront API token (public)
    - `NEXT_PUBLIC_SHOPIFY_STOREFRONT_API_VERSION` = např. `2025-04`
+   - Customer Account API (přihlášení zákazníka): `SHOPIFY_CLIENT_ID`, `SHOPIFY_CUSTOMER_SESSION_SECRET`, `SHOPIFY_AUTH_REDIRECT_URI`, `SHOPIFY_AUTH_LOGOUT_REDIRECT_URI`, a pokud discovery na storefront doméně vrací 404: **`SHOPIFY_CUSTOMER_AUTH_DOMAIN`** (např. `account.pookiecrafts.cz`)
    - volitelně: `SHOPIFY_STOREFRONT_PRIVATE_API_TOKEN` = private token (pouze server)
 3. **Důležité:** Po přidání nebo změně env spusť **nový deploy** (Deployments → … u posledního deploye → Redeploy). Proměnné `NEXT_PUBLIC_*` se vkládají při buildu, takže bez nového buildu zůstanou prázdné.
 

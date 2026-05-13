@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
     const apiKey = process.env.RESEND_API_KEY;
     const from = process.env.CONTACT_FROM_EMAIL;
-    const to = process.env.CONTACT_TO_EMAIL || "pookie.crafts909@gmail.com";
+    const to = process.env.CONTACT_TO_EMAIL || "info.pookiecrafts@gmail.com";
 
     if (!apiKey || !from) {
       return NextResponse.json(

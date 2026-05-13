@@ -153,33 +153,30 @@ export default async function HomePage({
 
   return (
     <div className="w-full">
-      <section className="relative bg-linear-to-b from-[#FFE6ED] to-background py-20 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div className="space-y-6">
-              <h1 className="text-4xl md:text-5xl lg:text-6xl">
-                {t("heroTitle")}
-              </h1>
-              <p className="text-lg text-muted-foreground max-w-md">
-                {t("heroSubtitle")}
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Button size="lg" asChild>
-                  <SmoothScrollLink href="#bestsellers">{t("shopNow")}</SmoothScrollLink>
-                </Button>
+      <section className="relative h-[calc(80svh-4rem)] min-h-[calc(80svh-4rem)] w-full overflow-hidden">
+        <HeroCarousel
+          images={carouselImages}
+          className="absolute inset-0 z-0 h-full max-h-none w-full rounded-none shadow-none aspect-auto"
+        />
 
-              </div>
-            </div>
-            <div className="relative">
-              <HeroCarousel images={carouselImages} />
-            </div>
+        <div className="relative z-20 mx-auto flex h-full max-w-7xl flex-col items-center justify-end px-4 pb-8 pt-24 text-center sm:px-6 md:pb-10 lg:px-8 lg:pb-12">
+          <div className="w-full max-w-3xl space-y-3 md:space-y-4">
+            <h1 className="text-4xl font-black text-white [text-shadow:0_3px_18px_rgba(0,0,0,0.65)] md:text-5xl lg:text-6xl">
+              {t("heroTitle")}
+            </h1>
+          </div>
+
+          <div className="mt-6 md:mt-8">
+            <Button size="lg" asChild>
+              <SmoothScrollLink href="#bestsellers">{t("shopNow")}</SmoothScrollLink>
+            </Button>
           </div>
         </div>
       </section>
 
       <section
         id="bestsellers"
-        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 scroll-mt-24"
+        className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 scroll-mt-20"
       >
         <div className="text-center mb-12">
           <h2 className="text-4xl mb-4">{t("bestsellers")}</h2>

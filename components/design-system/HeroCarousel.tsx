@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { ImageWithFallback } from "./ImageWithFallback";
+import { cn } from "@/lib/utils";
 
 export interface HeroCarouselImage {
   url: string;
@@ -13,9 +14,14 @@ export interface HeroCarouselImage {
 interface HeroCarouselProps {
   images: HeroCarouselImage[];
   intervalMs?: number;
+  className?: string;
 }
 
-export function HeroCarousel({ images, intervalMs = 5000 }: HeroCarouselProps) {
+export function HeroCarousel({
+  images,
+  intervalMs = 5000,
+  className,
+}: HeroCarouselProps) {
   const [index, setIndex] = useState(0);
 
   useEffect(() => {
@@ -29,7 +35,12 @@ export function HeroCarousel({ images, intervalMs = 5000 }: HeroCarouselProps) {
   if (images.length === 0) return null;
 
   return (
-    <div className="relative w-full aspect-[16/10] max-h-[500px] rounded-3xl overflow-hidden shadow-2xl bg-muted">
+    <div
+      className={cn(
+        "relative w-full aspect-16/10 max-h-[500px] rounded-3xl overflow-hidden shadow-2xl bg-muted",
+        className
+      )}
+    >
       {images.map((img, i) => (
         <div
           key={img.id ?? `${img.url}-${i}`}

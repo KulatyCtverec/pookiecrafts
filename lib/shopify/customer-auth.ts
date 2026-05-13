@@ -110,10 +110,29 @@ async function fetchJson<T>(url: string): Promise<T> {
   return (await response.json()) as T;
 }
 
+/**
+ * Domains that may host `/.well-known/openid-configuration` and `/.well-known/customer-account-api`.
+ * Prefer `SHOPIFY_CUSTOMER_AUTH_DOMAIN` first (e.g. account.pookiecrafts.cz): the storefront apex
+ * often does not serve OIDC discovery (404).
+ */
+function getDiscoveryDomainCandidates(): string[] {
+  const authHost = getCustomerAuthDomain();
+  const storeHost = getStoreDomain();
+  const seen = new Set<string>();
+  const out: string[] = [];
+  if (authHost) {
+    out.push(authHost);
+    seen.add(authHost);
+  }
+  if (!seen.has(storeHost)) {
+    out.push(storeHost);
+    seen.add(storeHost);
+  }
+  return out;
+}
+
 async function discoverWithFallback<T>(path: string): Promise<T> {
-  const candidates = [getStoreDomain(), getCustomerAuthDomain()].filter(
-    (value): value is string => !!value
-  );
+  const candidates = getDiscoveryDomainCandidates();
   let lastError: Error | null = null;
 
   for (const domain of candidates) {
@@ -126,10 +145,12 @@ async function discoverWithFallback<T>(path: string): Promise<T> {
     }
   }
 
-  throw (
-    lastError ??
-    new Error(`Failed discovery request for ${path} (no candidate domains).`)
-  );
+  const hint =
+    " Set SHOPIFY_CUSTOMER_AUTH_DOMAIN to your Customer Accounts host (e.g. account.pookiecrafts.cz from Shopify Admin → Customer Account API endpoints).";
+  if (lastError) {
+    throw new Error(`${lastError.message}${hint}`);
+  }
+  throw new Error(`Failed discovery request for ${path} (no candidate domains).${hint}`);
 }
 
 export async function getOpenIdConfiguration(): Promise<OpenIdConfig> {
