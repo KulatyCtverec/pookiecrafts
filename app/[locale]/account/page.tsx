@@ -3,6 +3,8 @@ import { AccountPageClient } from "./AccountPageClient";
 import { getCustomerSessionFromCookies } from "@/lib/shopify/customer-session";
 import { getCustomerSummaryAndOrders } from "@/lib/shopify/customer-api";
 
+type AccountServerPayload = Awaited<ReturnType<typeof getCustomerSummaryAndOrders>>;
+
 function toLanguageCode(locale: string): string {
   const normalized = locale.trim().toLowerCase().split("-")[0];
   const map: Record<string, string> = {
@@ -25,27 +27,7 @@ export default async function AccountPage({
   const languageCode = toLanguageCode(locale);
   const session = await getCustomerSessionFromCookies();
 
-  let initialData: {
-    customer: {
-      id: string;
-      firstName: string | null;
-      lastName: string | null;
-      email: string;
-      phoneNumber: string | null;
-    };
-    ordersPage: {
-      orders: {
-        id: string;
-        number: number;
-        processedAt: string;
-        financialStatus: string | null;
-        fulfillmentStatus: string | null;
-        totalPrice: { amount: string; currencyCode: string };
-      }[];
-      hasNextPage: boolean;
-      endCursor: string | null;
-    };
-  } | null = null;
+  let initialData: AccountServerPayload | null = null;
   let loadError = false;
 
   if (session) {
@@ -85,6 +67,27 @@ export default async function AccountPage({
         orderDate: t("orderDate"),
         orderTotal: t("orderTotal"),
         nextPage: t("nextPage"),
+        addressHeading: t("addressHeading"),
+        street: t("street"),
+        streetNumber: t("streetNumber"),
+        city: t("city"),
+        zip: t("zip"),
+        country: t("country"),
+        zoneOptional: t("zoneOptional"),
+        company: t("company"),
+        buyingForCompany: t("buyingForCompany"),
+        saveAddress: t("saveAddress"),
+        addressSaved: t("addressSaved"),
+        newsletterHeading: t("newsletterHeading"),
+        newsletterDescription: t("newsletterDescription"),
+        newsletterOptIn: t("newsletterOptIn"),
+        saveNewsletter: t("saveNewsletter"),
+        newsletterSaved: t("newsletterSaved"),
+        phoneHint: t("phoneHint"),
+        accountDeletionHeading: t("accountDeletionHeading"),
+        accountDeletionDescription: t("accountDeletionDescription"),
+        accountDeletionContact: t("accountDeletionContact"),
+        requiredNote: t("requiredNote"),
       }}
     />
   );
