@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
-import { Nunito } from "next/font/google";
+import { DM_Serif_Display, Nunito } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { getBaseUrl } from "@/lib/seo";
 
@@ -46,6 +47,7 @@ export default async function RootLayout({
       </head>
       <body className={`${nunito.variable} font-sans antialiased`}>
         {children}
+        <Analytics />
       </body>
     </html>
   );
