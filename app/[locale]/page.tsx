@@ -10,6 +10,7 @@ import {
   getCollectionByHandle,
   getHomepageCarouselImages,
   getProductsByTypeSummary,
+  pickCardVariantId,
 } from "@/lib/shopify";
 import { Star, Heart } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -77,6 +78,7 @@ export default async function HomePage({
     image: string | null;
     price: string;
     currencyCode: string;
+    variantId: string | null;
   }[] = [];
   const maxItems = 4;
   for (let i = 0; bestsellersFromTypes.length < maxItems; i += 1) {
@@ -90,6 +92,7 @@ export default async function HomePage({
         image: candle.featuredImage?.url ?? null,
         price: candle.priceRange.minVariantPrice.amount,
         currencyCode: candle.priceRange.minVariantPrice.currencyCode,
+        variantId: pickCardVariantId(candle.variants?.nodes),
       });
     }
     if (bestsellersFromTypes.length >= maxItems) break;
@@ -101,6 +104,7 @@ export default async function HomePage({
         image: journal.featuredImage?.url ?? null,
         price: journal.priceRange.minVariantPrice.amount,
         currencyCode: journal.priceRange.minVariantPrice.currencyCode,
+        variantId: pickCardVariantId(journal.variants?.nodes),
       });
     }
     if (!candle && !journal) break;
@@ -118,6 +122,7 @@ export default async function HomePage({
           image: first.featuredImage?.url ?? null,
           price: first.priceRange.minVariantPrice.amount,
           currencyCode: first.priceRange.minVariantPrice.currencyCode,
+          variantId: pickCardVariantId(first.variants?.nodes),
         },
       ];
     }) ?? [];

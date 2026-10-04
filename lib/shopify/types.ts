@@ -85,6 +85,9 @@ export interface ShopifyProductSummary {
   priceRange: {
     minVariantPrice: ShopifyMoney;
   };
+  variants?: {
+    nodes: Pick<ShopifyProductVariant, "id" | "availableForSale">[];
+  };
 }
 
 export interface ShopifyCollectionWithProducts extends ShopifyCollection {

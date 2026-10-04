@@ -47,8 +47,9 @@ interface CartContextValue {
   addItem: (
     variantId: string,
     quantity?: number,
-    optimisticSnapshot?: OptimisticCartLineSnapshot
-  ) => Promise<void>;
+    optimisticSnapshot?: OptimisticCartLineSnapshot,
+    options?: { openCart?: boolean }
+  ) => Promise<boolean>;
   updateQuantity: (lineId: string, quantity: number) => Promise<void>;
   removeLine: (lineId: string) => Promise<void>;
 }
@@ -142,8 +143,9 @@ export function CartProvider({
     async (
       variantId: string,
       quantity: number = 1,
-      optimisticSnapshot?: OptimisticCartLineSnapshot
-    ) => {
+      optimisticSnapshot?: OptimisticCartLineSnapshot,
+      options?: { openCart?: boolean }
+    ): Promise<boolean> => {
       setCartError(null);
       const snapshot = optimisticSnapshot ?? {
         variantId,
@@ -156,18 +158,21 @@ export function CartProvider({
         handle: "",
       };
       setOptimisticLines((prev) => [...prev, snapshot]);
-      setIsOpen(true);
+      if (options?.openCart !== false) {
+        setIsOpen(true);
+      }
       setIsPendingAdd(true);
       let cartId = await ensureCartId();
       if (!cartId) {
         setOptimisticLines((prev) => prev.filter((l) => l.variantId !== variantId));
         setIsPendingAdd(false);
-        return;
+        return false;
       }
       try {
         const c = await addToCart(cartId, variantId, quantity, locale);
         setCart(c);
         setOptimisticLines((prev) => prev.filter((l) => l.variantId !== variantId));
+        return true;
       } catch (e) {
         const msg = e instanceof Error ? e.message : "Failed to add to cart";
         const isInvalidCart =
@@ -181,13 +186,16 @@ export function CartProvider({
             const retry = await addToCart(cartId, variantId, quantity, locale);
             setCart(retry);
             setOptimisticLines((prev) => prev.filter((l) => l.variantId !== variantId));
+            return true;
           } catch (retryErr) {
             setCartError(retryErr instanceof Error ? retryErr.message : "Failed to add to cart");
             setOptimisticLines((prev) => prev.filter((l) => l.variantId !== variantId));
+            return false;
           }
         } else {
           setCartError(msg);
           setOptimisticLines((prev) => prev.filter((l) => l.variantId !== variantId));
+          return false;
         }
       } finally {
         setIsPendingAdd(false);

@@ -6,6 +6,7 @@ import { BackButton } from "@/components/design-system/BackButton";
 import { getTranslations } from "next-intl/server";
 import { locales, defaultLocale } from "@/lib/i18n/config";
 import { buildUrl } from "@/lib/seo";
+import { pickCardVariantId } from "@/lib/shopify";
 
 interface CollectionPageProps {
   params: Promise<{ handle: string; locale: string }>;
@@ -96,6 +97,7 @@ export default async function CollectionPage({ params }: CollectionPageProps) {
     image: p.featuredImage?.url ?? null,
     price: p.priceRange.minVariantPrice.amount,
     currencyCode: p.priceRange.minVariantPrice.currencyCode,
+    variantId: pickCardVariantId(p.variants?.nodes),
   }));
 
   const collectionUrl = buildUrl(`/${locale}/collections/${collection.handle}`);

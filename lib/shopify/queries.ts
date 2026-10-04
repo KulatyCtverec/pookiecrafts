@@ -70,6 +70,12 @@ export const COLLECTION_BY_HANDLE_QUERY = `
               currencyCode
             }
           }
+          variants(first: 20) {
+            nodes {
+              id
+              availableForSale
+            }
+          }
         }
       }
     }
@@ -115,6 +121,12 @@ export const PRODUCTS_BY_TYPE_SUMMARY_QUERY = `
           minVariantPrice {
             amount
             currencyCode
+          }
+        }
+        variants(first: 20) {
+          nodes {
+            id
+            availableForSale
           }
         }
       }

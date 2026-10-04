@@ -318,6 +318,12 @@ function shopifyProductToSummary(p: ShopifyProduct): ShopifyProductSummary {
     availableForSale: p.availableForSale ?? true,
     featuredImage: p.featuredImage,
     priceRange: p.priceRange,
+    variants: {
+      nodes: p.variants.nodes.map((v) => ({
+        id: v.id,
+        availableForSale: v.availableForSale,
+      })),
+    },
   };
 }
 

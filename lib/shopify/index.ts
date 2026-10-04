@@ -36,3 +36,4 @@ export {
   getVariantMaxQuantity,
 } from "./variant-max-quantity";
 export type { VariantQuantityCapInput } from "./variant-max-quantity";
+export { pickCardVariantId } from "./pick-card-variant";

@@ -1,6 +1,7 @@
 "use server";
 
 import { getProductsByHandles } from "@/lib/shopify/client";
+import { pickCardVariantId } from "@/lib/shopify/pick-card-variant";
 
 const MAX_HANDLES = 50;
 
@@ -18,6 +19,7 @@ export type WishlistProductDto = {
   image: string | null;
   price: string;
   currencyCode: string;
+  variantId: string | null;
 };
 
 export async function fetchWishlistProducts(
@@ -50,6 +52,7 @@ export async function fetchWishlistProducts(
       image: p.featuredImage?.url ?? null,
       price: p.priceRange.minVariantPrice.amount,
       currencyCode: p.priceRange.minVariantPrice.currencyCode,
+      variantId: pickCardVariantId(p.variants?.nodes),
     });
   }
   return ordered;
